@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Signal Tap ‘n’ Zap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Official Signal Brand Font: Rubik (Clean, Rounded Sans-Serif) -->
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      font-family: 'Rubik', sans-serif;
+    }
+    body {
+      font-family: 'Rubik', sans-serif;
+      overflow: hidden;
+      background-color: #003594;
+      background-image: url('background.png');
+      background-repeat: no-repeat;
+      background-position: center top;
+      background-size: cover;
+      touch-action: none;
+      user-select: none;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    /* Mint Water Wave Effect in Background */
+    .mint-wave {
+      position: absolute;
+      width: 200%;
+      height: 120px;
+      bottom: -30px;
+      left: -50%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.4) 0%, rgba(56,189,248,0.15) 70%, transparent 100%);
+      border-radius: 45%;
+      animation: waveFloat 8s linear infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes waveFloat {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Glossy Bubble Styling with Fresh Water Glow */
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.35) 25%, rgba(56, 189, 248, 0.25) 55%, rgba(255, 255, 255, 0.7) 100%);
+      box-shadow: 
+        inset 0 0 16px rgba(255, 255, 255, 0.9),
+        inset 5px 5px 10px rgba(255, 255, 255, 0.8),
+        inset -5px -5px 12px rgba(2, 132, 199, 0.45),
+        0 8px 24px rgba(2, 60, 110, 0.28);
+      border: 1.8px solid rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(2px);
+      transition: transform 0.06s ease-out;
+      will-change: transform;
+    }
+
+    /* Special Highlight when carrying Signal Toothpaste: Pulsing Golden/Cyan Aura */
+    .bubble.signal-pack {
+      border: 3px solid rgba(255, 255, 255, 0.98);
+      box-shadow: 
+        inset 0 0 24px rgba(255, 255, 255, 1),
+        0 0 24px rgba(250, 204, 21, 0.8),
+        0 0 45px rgba(56, 189, 248, 0.7);
+      animation: signalAuraPulse 1.6s ease-in-out infinite alternate;
+    }
+    @keyframes signalAuraPulse {
+      0% {
+        box-shadow: 
+          inset 0 0 20px rgba(255, 255, 255, 0.9),
+          0 0 18px rgba(250, 204, 21, 0.6),
+          0 0 35px rgba(56, 189, 248, 0.5);
+      }
+      100% {
+        box-shadow: 
+          inset 0 0 28px rgba(255, 255, 255, 1),
+          0 0 32px rgba(250, 204, 21, 0.95),
+          0 0 55px rgba(56, 189, 248, 0.85);
+      }
+    }
+    .bubble.signal-pack .bubble-content {
+      width: 96%;
+      height: 96%;
+    }
+
+    /* Toxic aura for Germ Bubble */
+    .bubble.germ-bubble {
+      border: 2px solid rgba(132, 204, 22, 0.8);
+      box-shadow: 
+        inset 0 0 16px rgba(163, 230, 53, 0.4),
+        0 0 16px rgba(101, 163, 13, 0.5);
+    }
+
+    /* Shiny reflection glints */
+    .bubble::before {
+      content: '';
+      position: absolute;
+      top: 14%;
+      left: 18%;
+      width: 28%;
+      height: 20%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 80%);
+      transform: rotate(-35deg);
+      pointer-events: none;
+    }
+
+    .bubble::after {
+      content: '';
+      position: absolute;
+      bottom: 14%;
+      right: 18%;
+      width: 14%;
+      height: 12%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 75%);
+      pointer-events: none;
+    }
+
+    /* Floating Item container */
+    .bubble-content {
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 85%;
+      height: 85%;
+    }
+
+    /* Particle splash on pop */
+    .pop-particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, #ffffff, rgba(255,255,255,0));
+      animation: popBurst 0.45s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    }
+    @keyframes popBurst {
+      0% { transform: translate(0, 0) scale(1.1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+    }
+
+    /* Screen shake */
+    .shake-screen {
+      animation: shakeAnim 0.35s ease-in-out;
+    }
+    @keyframes shakeAnim {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-10px, 6px); }
+      40% { transform: translate(10px, -6px); }
+      60% { transform: translate(-6px, 4px); }
+      80% { transform: translate(6px, -3px); }
+    }
+
+    /* Speed Rush Speedlines (when time is low) */
+    .speed-lines {
+      background: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.06) 40px, rgba(255,255,255,0.06) 45px);
+      animation: speedRush 0.3s linear infinite;
+    }
+    @keyframes speedRush {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 90px; }
+    }
+
+    /* Menu Floating Background Bubbles */
+    .menu-bubble {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.25) 30%, rgba(56, 189, 248, 0.2) 65%, rgba(255, 255, 255, 0.5) 100%);
+      box-shadow: 
+        inset 0 0 12px rgba(255, 255, 255, 0.75),
+        0 6px 16px rgba(0, 53, 148, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      animation: menuBubbleDrift linear infinite;
+    }
+    @keyframes menuBubbleDrift {
+      0% {
+        transform: translateY(115vh) translateX(0) scale(0.75);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.7;
+      }
+      90% {
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(-15vh) translateX(var(--drift-x, 25px)) scale(1.15);
+        opacity: 0;
+      }
+    }
+
+    /* Custom sleek scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(2, 44, 80, 0.3);
+      border-radius: 8px;
+    }
+        .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 8px;
+    }
+
+    /* Kiosk Background for Main Menu and How To Play Screens */
+    #main-menu, #how-to-play-modal {
+      background-color: #003594;
+      background-image: url('background.png');
+      background-repeat: no-repeat;
+      background-position: center top;
+      background-size: cover;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    @media (min-height: 800px) {
+      #main-menu, #how-to-play-modal {
+        overflow-y: hidden;
+      }
+    }
+
+    /* 3D Floating Animation for Signal Display Toothpaste (Clean without shadow) */
+    @keyframes floatToothpaste {
+      0% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-16px) rotate(-1deg) scale(1.015);
+      }
+      100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+    }
+
+    .toothpaste-float-anim {
+      animation: floatToothpaste 3.2s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    /* Hero Logo 3D Floating & Pulse Animation */
+    @keyframes heroLogoFloat {
+      0% {
+        transform: translateY(0px) scale(1);
+        filter: drop-shadow(0 10px 20px rgba(0, 53, 148, 0.25));
+      }
+      50% {
+        transform: translateY(-12px) scale(1.03);
+        filter: drop-shadow(0 22px 32px rgba(0, 53, 148, 0.45));
+      }
+      100% {
+        transform: translateY(0px) scale(1);
+        filter: drop-shadow(0 10px 20px rgba(0, 53, 148, 0.25));
+      }
+    }
+
+    .hero-logo-anim {
+      animation: heroLogoFloat 3.2s ease-in-out infinite;
+      will-change: transform, filter;
+    }
+
+    /* Premium 3D Arcade Push Button (Signal Navy Blue from 'S' logo letter, compact to word) */
+    .btn-3d-signal {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #3244a5 0%, #23328a 52%, #19246c 100%);
+      color: #ffffff;
+      font-family: 'Rubik', sans-serif;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 32px;
+      border: none;
+      box-shadow: 
+        0 16px 0 #0d1542,
+        0 24px 34px rgba(13, 21, 66, 0.5),
+        inset 0 3px 2px rgba(255, 255, 255, 0.4),
+        inset 0 -3px 2px rgba(0, 10, 35, 0.35);
+      text-shadow: 0 2px 4px rgba(5, 10, 30, 0.7);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
+      transform: translateY(0);
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .btn-3d-signal:hover {
+      background: linear-gradient(180deg, #3d52c4 0%, #2b3ca3 52%, #1e2b7f 100%);
+      box-shadow: 
+        0 16px 0 #0d1542,
+        0 28px 40px rgba(13, 21, 66, 0.6),
+        inset 0 3px 2px rgba(255, 255, 255, 0.5),
+        inset 0 -3px 2px rgba(0, 10, 35, 0.35);
+    }
+
+    .btn-3d-signal:active {
+      transform: translateY(12px) !important;
+      box-shadow: 
+        0 4px 0 #0d1542,
+        0 10px 18px rgba(13, 21, 66, 0.4),
+        inset 0 2px 1px rgba(255, 255, 255, 0.3),
+        inset 0 -2px 1px rgba(0, 10, 35, 0.25) !important;
+    }
+
+
+    /* Hero Logo & Start Section: lowered for kiosk touchscreen balance */
+    .kiosk-hero-container {
+      margin-top: 1rem;
+    }
+    @media (min-height: 1200px) {
+      .kiosk-hero-container {
+        margin-top: 60px;
+      }
+    }
+    @media (min-height: 1600px) {
+      .kiosk-hero-container {
+        margin-top: 110px;
+      }
+    }
+
+    /* Kiosk display positioning: sits comfortably in the deep blue lower area on 1080x1920 */
+    .kiosk-display-container {
+      margin-top: 2.5rem;
+    }
+    @media (min-height: 1200px) {
+      .kiosk-display-container {
+        margin-top: 240px;
+      }
+    }
+    @media (min-height: 1600px) {
+      #main-menu .kiosk-display-container {
+        margin-top: 360px;
+      }
+      #how-to-play-modal .kiosk-display-container {
+        margin-top: 240px;
+      }
+    }
+
+    /* Custom Duration Slider (Matching UI Screenshot) */
+    .custom-time-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 12px;
+      background: #0c3c5d;
+      border-radius: 9999px;
+      outline: none;
+    }
+    .custom-time-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #f7c93e;
+      cursor: pointer;
+      box-shadow: 0 0 14px rgba(247, 201, 62, 0.85);
+      border: 3px solid #ffffff;
+      transition: transform 0.1s;
+    }
+    .custom-time-slider::-webkit-slider-thumb:active {
+      transform: scale(1.2);
+    }
+    .custom-time-slider::-moz-range-thumb {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #f7c93e;
+      cursor: pointer;
+      box-shadow: 0 0 14px rgba(247, 201, 62, 0.85);
+      border: 3px solid #ffffff;
+    }
+    .custom-time-slider::-moz-range-track {
+      background: #0c3c5d;
+      height: 12px;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between overflow-hidden text-white select-none">
+
+  <!-- Speed rush lines background (active on frenzy/low time) -->
+  <div id="speed-lines-bg" class="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300 z-0"></div>
+  <div class="mint-wave"></div>
+
+  <!-- Red Flash Overlay for Germ Hit -->
+  <div id="damage-flash" class="absolute inset-0 bg-red-600/40 pointer-events-none opacity-0 transition-opacity duration-150 z-30"></div>
+
+  <!-- =========================================================
+       1. MAIN MENU SCREEN (SCALED FOR 1080x1920 KIOSK TOUCHSCREEN)
+       ========================================================= -->
+  <div id="main-menu" class="fixed inset-0 z-50 flex flex-col justify-between overflow-y-auto custom-scroll text-white p-6 sm:p-10">
+    
+    <!-- Floating Background Toothpaste Bubbles Layer -->
+    <div id="menu-floating-bubbles" class="absolute inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <!-- Soft Ambient Glow -->
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-sky-400/10 rounded-full blur-3xl pointer-events-none -z-0"></div>
+
+    <!-- TOP BAR: Left Space for baked-in Signal logo from background.png & Right Time Selector + Fullscreen -->
+    <div class="relative z-20 w-full flex items-center justify-between">
+      
+      <!-- Top-Left Spacer: Ensures the baked-in Signal logo from background.png is 100% visible and unblocked -->
+      <div class="h-20 sm:h-28 w-56 sm:w-80 pointer-events-none"></div>
+
+      <!-- Top-Right: Time Selector Button & Fullscreen Button -->
+      <div class="relative flex items-center gap-3 sm:gap-4">
+        
+        <!-- TIME BUTTON & POPUP -->
+        <div class="relative">
+          <button 
+            id="toggle-time-btn" 
+            type="button" 
+            aria-label="Change Duration" 
+            title="Change Duration"
+            class="bg-[#0b1f3c]/90 hover:bg-[#122e57] active:scale-95 px-5 py-3 sm:px-7 sm:py-4 rounded-2xl sm:rounded-3xl border border-white/25 shadow-xl flex items-center gap-3 cursor-pointer transition text-base sm:text-xl font-bold select-none"
+          >
+            <span class="text-sky-300">Time:</span>
+            <span id="button-duration-val" class="text-yellow-300 font-black text-xl sm:text-2xl">20s</span>
+          </button>
+
+          <!-- DURATION POPUP CARD (MATCHING USER SCREENSHOT, SCALED FOR KIOSK TOUCH) -->
+          <div 
+            id="time-panel-popup" 
+            class="hidden absolute top-full right-0 mt-4 z-50 bg-[#0f284e] p-6 sm:p-8 rounded-[36px] border border-sky-400/30 shadow-[0_25px_70px_rgba(0,0,0,0.75)] flex flex-col gap-4 sm:gap-5 w-[380px] sm:w-[480px] max-w-[95vw] transition-all"
+          >
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-1">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl select-none">⏱️</span>
+                <span class="text-lg sm:text-xl font-black uppercase tracking-wider text-white">DURATION</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span id="corner-duration-mode" class="text-xs sm:text-sm font-black px-3.5 py-1 rounded-xl border-2 border-[#f7c93e] text-[#f7c93e] bg-[#f7c93e]/10 uppercase tracking-wide">
+                  BALANCED
+                </span>
+                <button id="close-time-popup-btn" aria-label="Close" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-90 flex items-center justify-center text-sm sm:text-base text-white font-bold transition cursor-pointer">
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <!-- Stepper Container: [-] [ 20 SEC ] [+] -->
+            <div class="bg-[#0a1e3a] rounded-3xl p-3 sm:p-4 flex items-center justify-between gap-3 border border-white/10 shadow-inner">
+              <button id="time-minus-btn" type="button" aria-label="Decrease 1 second" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#1b3a6b] hover:bg-[#234b88] active:scale-90 text-white font-black text-3xl sm:text-4xl flex items-center justify-center transition cursor-pointer select-none shadow">
+                −
+              </button>
+              
+              <div class="flex-1 text-center flex items-baseline justify-center gap-2">
+                <span id="corner-duration-val" class="text-4xl sm:text-5xl md:text-6xl font-black text-[#f7c93e] leading-none">20</span>
+                <span class="text-base sm:text-lg font-black text-[#7fb2e5] uppercase">SEC</span>
+              </div>
+              
+              <button id="time-plus-btn" type="button" aria-label="Increase 1 second" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#1b3a6b] hover:bg-[#234b88] active:scale-90 text-white font-black text-3xl sm:text-4xl flex items-center justify-center transition cursor-pointer select-none shadow">
+                +
+              </button>
+            </div>
+
+            <!-- 1s Slider (5s to 40s) -->
+            <div class="w-full flex items-center gap-3 py-1.5 text-sm sm:text-base text-[#7fb2e5] font-black">
+              <span>5s</span>
+              <input id="time-range-slider" type="range" min="5" max="40" step="1" value="20" class="custom-time-slider cursor-pointer">
+              <span>40s</span>
+            </div>
+
+            <!-- Quick Mini-Presets -->
+            <div class="grid grid-cols-6 gap-2 pt-1">
+              <button type="button" class="quick-preset-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center" data-sec="5">5s</button>
+              <button type="button" class="quick-preset-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center" data-sec="10">10s</button>
+              <button type="button" class="quick-preset-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center" data-sec="15">15s</button>
+              <button type="button" class="quick-preset-btn active py-3 sm:py-3.5 text-sm sm:text-base font-black rounded-2xl bg-[#f7c93e] text-[#102a51] shadow-lg transition text-center" data-sec="20">20s</button>
+              <button type="button" class="quick-preset-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center" data-sec="30">30s</button>
+              <button type="button" class="quick-preset-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center" data-sec="40">40s</button>
+            </div>
+
+            <!-- Done Button -->
+            <button id="apply-time-btn" type="button" class="w-full mt-2 py-3.5 sm:py-4 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-blue-950 font-black text-sm sm:text-base uppercase tracking-wider rounded-2xl shadow active:scale-95 transition cursor-pointer">
+              Done
+            </button>
+          </div>
+        </div>
+
+        <!-- Top Right: Fullscreen Button -->
+        <button id="menu-fs-btn" aria-label="Toggle Fullscreen" title="Toggle Fullscreen" class="p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-[#0b1f3c]/90 hover:bg-[#122e57] border border-white/25 shadow-xl text-white transition active:scale-95 flex items-center justify-center cursor-pointer">
+          <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9V4.5m0 0H8.25m-4.5 0L9 9.75M20.25 9V4.5m0 0h-4.5m4.5 0L15 9.75M3.75 15v4.5m0 0H8.25m-4.5 0L9 14.25M20.25 15v4.5m0 0h-4.5m4.5 0L15 14.25"/>
+          </svg>
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- MAIN MENU CENTER AREA: CLEAN WHITE CARD + ANIMATED DISPLAY UNDERNEATH -->
+    <div class="my-auto w-full flex flex-col items-center gap-4 sm:gap-6 py-2">
+      
+      <!-- 1. HERO LOGO & START BUTTON (SEAMLESS DIRECTLY ON BACKGROUND) -->
+      <div class="kiosk-hero-container relative z-10 w-full max-w-[820px] mx-auto flex flex-col items-center gap-6 sm:gap-8 px-4 py-2 text-center">
+        
+        <!-- Accessible Title for Screen Readers -->
+        <h1 class="sr-only">Signal Tap ‘n’ Zap</h1>
+
+        <!-- PROMINENT LARGE LOGO-CLEAN.PNG (SIGNAL + TAP 'N' ZAP HERO TITLE ARTWORK) -->
+        <div class="w-full flex items-center justify-center py-2">
+          <img 
+            id="main-signal-logo" 
+            src="logo-clean.png" 
+            onerror="this.onerror=null; this.src='logo.png'; this.onerror=function(){ handleLogoError(this); };" 
+            alt="Signal Tap 'n' Zap" 
+            class="hero-logo-anim w-full h-auto max-w-[560px] sm:max-w-[660px] md:max-w-[720px] object-contain select-none cursor-pointer" 
+          />
+          <div id="svg-logo-fallback" class="hidden">
+            <svg class="h-20 sm:h-28 w-auto" viewBox="0 0 150 50" fill="none">
+              <rect x="2" y="4" width="146" height="42" rx="6" fill="#003594"/>
+              <path d="M2 4 L98 4 L72 46 L2 46 Z" fill="#FFFFFF"/>
+              <path d="M2 4 L44 4 L2 40 Z" fill="#E52320"/>
+              <text x="30" y="32" fill="#003594" font-family="'Rubik', sans-serif" font-weight="900" font-size="20" letter-spacing="-0.8">Signal</text>
+              <path d="M32 37 Q54 44 78 37" stroke="#E52320" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Hidden elements to preserve DOM IDs for existing scripts -->
+        <div class="hidden">
+          <button id="open-duration-from-pill-btn" type="button"><strong id="menu-current-duration-pill">20s</strong></button>
+        </div>
+
+        <!-- MAIN ACTION BUTTON: 3D SIGNAL NAVY PUSH BUTTON (COMPACT TO WORD SIZE) -->
+        <button 
+          id="menu-start-btn" 
+          type="button"
+          class="btn-3d-signal w-auto min-w-[320px] sm:min-w-[420px] max-w-fit px-12 sm:px-20 py-5 sm:py-7 text-4xl sm:text-5xl md:text-6xl text-center select-none"
+        >
+          START
+        </button>
+
+      </div>
+
+      <!-- 2. ANIMATED 3D SIGNAL DISPLAY TOOTHPASTE PACK (WIDER & LOWER ON BLUE BACKGROUND) -->
+      <div class="kiosk-display-container relative z-10 w-full max-w-[1080px] px-2 sm:px-4 mx-auto flex items-center justify-center pt-2 sm:pt-4 pb-6 sm:pb-10">
+        <div class="toothpaste-float-anim w-full flex items-center justify-center cursor-pointer select-none">
+          <img 
+            id="display-toothpaste-img"
+            src="display.png" 
+            alt="Signal Strong Teeth Toothpaste Display" 
+            class="w-full h-auto max-w-[1020px] sm:max-w-[1060px] md:max-w-[1080px] object-contain hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- KIOSK FOOTER -->
+    <div class="relative z-10 text-center pb-3 text-sm sm:text-base text-white/80 font-bold tracking-wide drop-shadow">
+      Touch screen to play &bull; Signal Tap ‘n’ Zap
+    </div>
+
+  </div>
+
+  <!-- =========================================================
+       2. HOW TO PLAY SCREEN (OPENS AFTER CLICKING START ON MENU)
+       ========================================================= -->
+  <div id="how-to-play-modal" class="fixed inset-0 z-50 hidden flex-col justify-between overflow-y-auto custom-scroll text-slate-800 p-6 sm:p-10 select-none">
+    
+    <!-- Floating Background Toothpaste Bubbles Layer -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <!-- Soft Ambient Glow -->
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-sky-400/10 rounded-full blur-3xl pointer-events-none -z-0"></div>
+
+    <!-- TOP BAR: Left Space for baked-in Signal logo from background.png & Right Quick Back Button -->
+    <div class="relative z-20 w-full flex items-center justify-between">
+      <!-- Top-Left Spacer: Ensures the baked-in Signal logo from background.png is 100% visible and unblocked -->
+      <div class="h-20 sm:h-28 w-56 sm:w-80 pointer-events-none"></div>
+
+      <!-- Top-Right: Quick Back Button -->
+      <button 
+        type="button" 
+        onclick="document.getElementById('how-modal-back-btn').click()"
+        aria-label="Back to Menu"
+        class="bg-[#0b1f3c]/90 hover:bg-[#122e57] active:scale-95 px-5 py-3 sm:px-7 sm:py-4 rounded-2xl sm:rounded-3xl border border-white/25 shadow-xl text-white font-bold flex items-center gap-2 cursor-pointer transition text-base sm:text-xl"
+      >
+        <span>← Menu</span>
+      </button>
+    </div>
+
+    <!-- CENTER AREA: LOGO + HOW TO PLAY INSTRUCTIONS + START BUTTON -->
+    <div class="my-auto w-full flex flex-col items-center gap-4 sm:gap-6 py-2">
+      
+      <!-- HERO ARTWORK: LOGO-CLEAN.PNG -->
+      <div class="w-full flex items-center justify-center py-1 sm:py-2">
+        <img 
+          src="logo-clean.png" 
+          alt="Signal Tap 'n' Zap" 
+          class="hero-logo-anim w-full h-auto max-w-[500px] sm:max-w-[600px] md:max-w-[660px] object-contain select-none" 
+        />
+      </div>
+
+      <!-- INSTRUCTIONS BLOCK (ENLARGED TYPOGRAPHY FOR KIOSK) -->
+      <div class="w-full max-w-[960px] mx-auto flex flex-col items-center gap-3 sm:gap-5 text-center px-4">
+        <!-- Title: HOW TO PLAY -->
+        <h2 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-[#002d72] tracking-wider uppercase leading-none">
+          HOW TO PLAY
+        </h2>
+
+        <!-- Catchphrase: Ready, set, tap! -->
+        <p class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#e52320] tracking-wide">
+          Ready, set, tap!
+        </p>
+
+        <!-- Instruction: Collect 10 Signal toothpastes as fast as you can to unlock your reward. -->
+        <p class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-slate-700 font-bold max-w-[900px] leading-snug sm:leading-normal">
+          Collect <strong class="text-[#002d72] font-black underline decoration-sky-400">10 Signal toothpastes</strong> as fast as you can to unlock your reward.
+        </p>
+
+        <!-- Time Pill with ID how-duration-val preserved -->
+        <div class="inline-flex items-center gap-3 px-7 py-2.5 rounded-2xl bg-sky-50 border-2 border-sky-200 text-[#002d72] font-black text-lg sm:text-2xl shadow-sm mt-1">
+          <span>⏱️ Time:</span>
+          <strong id="how-duration-val" class="font-black text-[#e52320] text-xl sm:text-3xl">20s</strong>
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS: START + BACK TO MENU -->
+      <div class="w-full max-w-[820px] mx-auto flex flex-col items-center gap-3 sm:gap-4 px-4 pt-2">
+        <!-- START BUTTON: 3D SIGNAL NAVY PUSH BUTTON (COMPACT TO WORD SIZE) -->
+        <button 
+          id="how-modal-start-btn" 
+          type="button" 
+          class="btn-3d-signal w-auto min-w-[320px] sm:min-w-[420px] max-w-fit px-12 sm:px-20 py-5 sm:py-7 text-4xl sm:text-5xl md:text-6xl text-center select-none"
+        >
+          START
+        </button>
+
+        <!-- Hidden back button to preserve DOM ID and JavaScript functionality -->
+        <div class="hidden">
+          <button id="how-modal-back-btn" type="button"></button>
+        </div>
+      </div>
+
+      <!-- ANIMATED 3D SIGNAL DISPLAY TOOTHPASTE PACK (WIDER & LOWER ON BLUE BACKGROUND) -->
+      <div class="kiosk-display-container relative z-10 w-full max-w-[1080px] px-2 sm:px-4 mx-auto flex items-center justify-center pt-2 sm:pt-4 pb-6 sm:pb-10">
+        <div class="toothpaste-float-anim w-full flex items-center justify-center cursor-pointer select-none">
+          <img 
+            src="display.png" 
+            alt="Signal Strong Teeth Toothpaste Display" 
+            class="w-full h-auto max-w-[1020px] sm:max-w-[1060px] md:max-w-[1080px] object-contain hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- KIOSK FOOTER -->
+    <div class="relative z-10 text-center pb-3 text-sm sm:text-base text-white/80 font-bold tracking-wide drop-shadow">
+      Touch screen to play &bull; Signal Tap ‘n’ Zap
+    </div>
+
+  </div>
+
+  <!-- =========================================================
+       3. IN-GAME TOP HEADER / HUD (KIOSK TOUCHSCREEN SCALE)
+       ========================================================= -->
+    <!-- =========================================================
+       TOP FLOATING HUD: TIME (LEFT), CLEAN-LOGO (CENTER), COUNT /10 (RIGHT)
+       ========================================================= -->
+    <!-- =========================================================
+       TOP FLOATING HUD: TIME (LEFT), CLEAN-LOGO (CENTER), TOOTHPASTE TARGET (RIGHT)
+       ========================================================= -->
+  <header class="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6 flex flex-col items-center select-none">
+    
+    <!-- Top HUD Box: Solid Deep Navy Glass for 100% High-Contrast Visibility -->
+    <div class="w-full flex items-center justify-between bg-[#001d4a]/92 backdrop-blur-md px-6 sm:px-10 py-4 sm:py-5 rounded-[36px] border-2 border-white/40 shadow-2xl relative">
+      
+      <!-- 1. LEFT: TIME BOX (LOKUWATA) -->
+      <div class="flex items-center gap-3 sm:gap-4 bg-[#002d72] px-5 sm:px-8 py-2.5 sm:py-4 rounded-2xl sm:rounded-3xl border-2 border-sky-400/50 shadow-lg">
+        <div class="flex flex-col items-start leading-tight">
+          <span class="text-xs sm:text-sm md:text-base text-sky-200 font-black uppercase tracking-wider">Time</span>
+          <span id="timer-val" class="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">20<span class="text-xl sm:text-2xl md:text-3xl font-bold ml-1 text-sky-300">s</span></span>
+        </div>
+      </div>
+
+      <!-- 2. MIDDLE: CLEAN-LOGO (LARGE & CENTERED) -->
+      <div class="flex items-center justify-center px-2 flex-1 max-w-[380px]">
+        <img src="logo-clean.png" alt="Signal Tap 'n' Zap" class="h-16 sm:h-22 md:h-26 w-auto object-contain filter drop-shadow-xl select-none hero-logo-anim" />
+      </div>
+
+      <!-- 3. RIGHT: TARGET TOOTHPASTE (display.png) + COUNT /10 -->
+      <div class="flex items-center gap-3 sm:gap-5 bg-[#002d72] px-4 sm:px-7 py-2.5 sm:py-3.5 rounded-2xl sm:rounded-3xl border-2 border-sky-400/50 shadow-lg">
+        <!-- Toothpaste display.png Card with TARGET GOAL Badge (ENLARGED DISPLAY.PNG) -->
+        <div class="relative w-36 sm:w-56 md:w-68 lg:w-80 h-14 sm:h-20 md:h-24 bg-white rounded-xl sm:rounded-2xl flex items-center justify-center px-2 py-1 shadow-md border-2 border-sky-300">
+          <img src="display.png" alt="Signal Toothpaste" class="w-full h-auto max-h-full object-contain filter drop-shadow-sm select-none" />
+          <span class="absolute -top-3 -right-2 bg-red-600 text-white text-[11px] sm:text-xs font-black px-2.5 py-0.5 rounded-full shadow-md uppercase tracking-wider">GOAL</span>
+        </div>
+
+        <div class="flex flex-col items-start leading-tight">
+          <span class="text-xs sm:text-sm md:text-base text-sky-200 font-black uppercase tracking-wider">Collected</span>
+          <div class="flex items-baseline gap-1">
+            <span id="target-count" class="text-3xl sm:text-5xl md:text-6xl font-black text-yellow-300 drop-shadow">0</span>
+            <span class="text-2xl sm:text-3xl md:text-4xl font-black text-white/90">/10</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Exit button for Kiosk Operator in top-right -->
+      <button 
+        id="in-game-menu-btn" 
+        type="button" 
+        aria-label="Main Menu" 
+        title="Main Menu"
+        class="absolute -top-3 right-6 px-3.5 py-1.5 rounded-full bg-blue-950 hover:bg-blue-900 active:scale-95 text-white/80 hover:text-white border border-white/20 shadow text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+      >
+        <span>✕ Menu</span>
+      </button>
+
+    </div>
+
+    <!-- Hidden element preservation for DOM verification & JS compatibility -->
+    <div class="hidden" aria-hidden="true">
+      <span id="score-val">0</span>
+      <div id="combo-badge"><span id="combo-text"></span></div>
+      <button id="fullscreen-btn" type="button">
+        <span id="fullscreen-enter-icon"></span>
+        <span id="fullscreen-exit-icon"></span>
+      </button>
+    </div>
+
+    <!-- Live Fast Progress Bar -->
+    <div class="w-full bg-[#001d4a]/80 h-3 sm:h-5 rounded-full mt-3 overflow-hidden border border-white/25 shadow-inner">
+      <div id="progress-fill" class="h-full bg-gradient-to-r from-yellow-400 via-emerald-400 to-sky-300 transition-all duration-200" style="width: 0%"></div>
+    </div>
+  </header>
+
+  <!-- GAME INTERACTIVE AREA -->
+  <main id="game-container" class="relative flex-1 w-full overflow-hidden z-10 touch-none">
+    <!-- Active Floating Bubbles get injected here -->
+  </main>
+
+  <!-- BOTTOM STATUS / QUICK TIP -->
+  <footer class="relative z-20 pb-4 px-6 text-center">
+    <p class="inline-block bg-sky-950/60 backdrop-blur-md px-6 py-2 rounded-full text-sm sm:text-base font-bold text-sky-200 border border-white/20 shadow-md">
+      <span class="text-yellow-300 font-black">Tap Signal (+200)</span> & Mint (+100) &bull; <span class="text-red-300 font-black">Avoid Cavity Germs (-150)</span>
+    </p>
+  </footer>
+
+  <!-- =========================================================
+       4. GAME OVER / WIN MODAL (LARGE KIOSK SCALE)
+       ========================================================= -->
+  <!-- =========================================================
+       MODAL: GAME OVER / VICTORY MODAL (LARGE KIOSK SCALE)
+       ========================================================= -->
+  <div id="end-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-8 md:p-10 bg-blue-950/85 backdrop-blur-md select-none">
+    <div class="max-w-[980px] w-full bg-gradient-to-b from-sky-600 via-blue-800 to-blue-950 p-8 sm:p-14 md:p-16 rounded-[48px] sm:rounded-[56px] border-4 border-white/50 shadow-2xl text-center transition-all flex flex-col gap-6 sm:gap-8 md:gap-10 items-center">
+      
+      <!-- Prominent logo-clean.png at top of Congratulations / Fail screen -->
+      <div class="w-full flex items-center justify-center py-2">
+        <img src="logo-clean.png" alt="Signal Tap 'n' Zap" class="h-32 sm:h-44 md:h-56 lg:h-64 w-auto object-contain filter drop-shadow-2xl select-none hero-logo-anim" />
+      </div>
+
+      <!-- Hidden preservation for IDs: end-icon, goal-status-badge, final-score, final-collected -->
+      <div class="hidden" aria-hidden="true">
+        <div id="end-icon"></div>
+        <div id="goal-status-badge"></div>
+        <span id="final-score"></span>
+        <span id="final-collected"></span>
+      </div>
+
+      <!-- Title: Congratulations, or Fail, (Balanced size, no overflow) -->
+      <h2 id="end-title" class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-yellow-300 tracking-normal sm:tracking-wide uppercase drop-shadow-xl leading-tight px-4 max-w-full">
+        Congratulations,
+      </h2>
+
+      <!-- Subtitle: Great job! or Time’s up! -->
+      <p id="end-subtitle" class="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-wide drop-shadow-md">
+        Great job!
+      </p>
+
+      <!-- Feedback / Body text: 2 lines -->
+      <div class="px-4 py-2 max-w-[880px]">
+        <div id="end-feedback" class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-sky-100 leading-snug sm:leading-relaxed">
+          <span class="block">Your quick reflexes earned you a prize.</span>
+          <span class="block text-yellow-300 font-black mt-2 sm:mt-4">Claim your Signal gift now.</span>
+        </div>
+      </div>
+
+      <!-- Action Button: MAIN MENU ONLY (LARGE 3D KIOSK BUTTON) -->
+      <div class="flex flex-col items-center w-full pt-4 sm:pt-8">
+        <button 
+          id="menu-btn" 
+          type="button" 
+          class="btn-3d-signal w-full max-w-[700px] py-6 sm:py-8 text-4xl sm:text-5xl md:text-6xl text-center select-none"
+        >
+          MAIN MENU
+        </button>
+
+        <!-- Hidden preservation for restart-btn to prevent JS null errors & preserve DOM contract -->
+        <button id="restart-btn" type="button" class="hidden" aria-hidden="true"></button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================
+       JAVASCRIPT GAME ENGINE
+       ========================================================= -->
+  <script>
+    /* =========================================================
+       AUDIO SYNTHESIZER (WEB AUDIO API)
+       Generates dynamic pops, chimes, buzzers & fanfares.
+       ========================================================= */
+    const SoundEngine = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+      playPop(freq = 600) {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.8, now + 0.04);
+        osc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
+
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      },
+      playChime(count = 1) {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99, 1046.50, 1318.5]; // C, E, G, C6, E6
+        const freq = notes[Math.min(count, notes.length - 1)];
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      },
+      playGermBuzzer() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.linearRampToValueAtTime(80, now + 0.22);
+
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.22);
+      },
+      playWinFanfare() {
+        if (!this.ctx) return;
+        const notes = [440, 554, 659, 880];
+        notes.forEach((f, i) => {
+          setTimeout(() => {
+            const now = this.ctx.currentTime;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(f, now);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.35);
+          }, i * 110);
+        });
+      }
+    };
+
+    /* Logo Error Handler to switch to SVG fallback seamlessly */
+    function handleLogoError(img) {
+      if (img) img.style.display = 'none';
+      const fallback = document.getElementById('svg-logo-fallback');
+      if (fallback) fallback.classList.remove('hidden');
+    }
+
+    /* =========================================================
+       SVG TEMPLATES FOR GAME ITEMS (USING RUBIK FONT)
+       ========================================================= */
+    const SVG_ITEMS = {
+      SIGNAL: `
+        <div class="relative w-full h-full flex items-center justify-center select-none pointer-events-none">
+          <!-- Floating Goal Badge -->
+          <div class="absolute -top-3.5 -right-1 bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-400 text-blue-950 font-black text-[11px] sm:text-xs md:text-sm px-2.5 py-0.5 rounded-full shadow-lg border-2 border-white flex items-center gap-1 uppercase tracking-wider animate-bounce select-none">
+            <span>★ GOAL</span>
+          </div>
+
+          <!-- Twinkling Star 1 (Top-Right Gold) -->
+          <svg class="absolute top-2 right-4 w-5 h-5 sm:w-7 sm:h-7 text-yellow-300 drop-shadow animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/>
+          </svg>
+
+          <!-- Twinkling Star 2 (Bottom-Left Cyan) -->
+          <svg class="absolute bottom-2 left-4 w-4 h-4 sm:w-6 sm:h-6 text-sky-300 drop-shadow animate-ping" style="animation-duration: 2s;" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/>
+          </svg>
+
+          <!-- Twinkling Star 3 (Top-Left White Sparkle) -->
+          <svg class="absolute top-3 left-6 w-3 h-3 sm:w-5 sm:h-5 text-white drop-shadow animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/>
+          </svg>
+
+          <!-- 3D Toothpaste Tube -->
+          <img src="display.png" alt="Signal Toothpaste" class="w-[98%] h-auto max-h-[96%] object-contain filter drop-shadow-2xl -rotate-12 scale-105" />
+        </div>
+      `,
+      MINT: `
+        <svg class="w-14 h-14 drop-shadow" viewBox="0 0 80 80" fill="none">
+          <path d="M40 70 C20 60 10 35 25 15 C45 20 60 35 40 70 Z" fill="#10B981"/>
+          <path d="M40 70 C60 60 70 35 55 15 C35 20 20 35 40 70 Z" fill="#059669"/>
+          <path d="M40 70 L40 20" stroke="#D1FAE5" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M40 45 Q30 35 24 38" stroke="#D1FAE5" stroke-width="1.8"/>
+          <path d="M40 52 Q50 42 56 46" stroke="#D1FAE5" stroke-width="1.8"/>
+          <circle cx="34" cy="24" r="3" fill="#FFFFFF" fill-opacity="0.8"/>
+          <circle cx="48" cy="34" r="2" fill="#FFFFFF" fill-opacity="0.8"/>
+        </svg>
+      `,
+
+      TOOTH: `
+        <svg class="w-14 h-14 drop-shadow-lg" viewBox="0 0 80 80" fill="none">
+          <path d="M22 20 C18 35 20 62 28 65 C34 67 36 48 40 48 C44 48 46 67 52 65 C60 62 62 35 58 20 C54 10 46 12 40 16 C34 12 26 10 22 20 Z" fill="#FFFFFF" stroke="#38BDF8" stroke-width="2"/>
+          <path d="M26 24 C24 30 25 42 27 48" stroke="#E0F2FE" stroke-width="3" stroke-linecap="round"/>
+          <path d="M56 12 L58 17 L63 19 L58 21 L56 26 L54 21 L49 19 L54 17 Z" fill="#FACC15"/>
+          <path d="M18 42 L19 45 L22 46 L19 47 L18 50 L17 47 L14 46 L17 45 Z" fill="#FACC15"/>
+        </svg>
+      `,
+
+      GERM: `
+        <svg class="w-16 h-16 drop-shadow-xl" viewBox="0 0 100 100" fill="none">
+          <g>
+            <circle cx="50" cy="12" r="6" fill="#65A30D"/>
+            <circle cx="50" cy="88" r="6" fill="#65A30D"/>
+            <circle cx="12" cy="50" r="6" fill="#65A30D"/>
+            <circle cx="88" cy="50" r="6" fill="#65A30D"/>
+            <circle cx="23" cy="23" r="5" fill="#65A30D"/>
+            <circle cx="77" cy="23" r="5" fill="#65A30D"/>
+            <circle cx="23" cy="77" r="5" fill="#65A30D"/>
+            <circle cx="77" cy="77" r="5" fill="#65A30D"/>
+            <rect x="46" y="10" width="8" height="80" rx="4" fill="#84CC16"/>
+            <rect x="10" y="46" width="80" height="8" rx="4" fill="#84CC16"/>
+            <line x1="23" y1="23" x2="77" y2="77" stroke="#84CC16" stroke-width="8" stroke-linecap="round"/>
+            <line x1="77" y1="23" x2="23" y2="77" stroke="#84CC16" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="32" fill="#84CC16"/>
+            <circle cx="50" cy="50" r="28" fill="#65A30D"/>
+            <ellipse cx="40" cy="42" rx="7" ry="8" fill="#FFFFFF"/>
+            <circle cx="41" cy="43" r="3.5" fill="#1C1917"/>
+            <ellipse cx="60" cy="42" rx="7" ry="8" fill="#FFFFFF"/>
+            <circle cx="59" cy="43" r="3.5" fill="#1C1917"/>
+            <path d="M33 34 L47 39" stroke="#365314" stroke-width="3" stroke-linecap="round"/>
+            <path d="M67 34 L53 39" stroke="#365314" stroke-width="3" stroke-linecap="round"/>
+            <path d="M38 56 Q50 50 62 56 Q50 68 38 56 Z" fill="#450A0A"/>
+            <polygon points="43,54 46,59 48,54" fill="#FFFFFF"/>
+            <polygon points="52,54 55,59 57,54" fill="#FFFFFF"/>
+            <polygon points="48,63 50,58 53,63" fill="#FFFFFF"/>
+          </g>
+        </svg>
+      `
+    };
+
+    /* =========================================================
+       GAME STATE & CONFIGURATION
+       ========================================================= */
+    const CONFIG = {
+      TOTAL_TIME: 20,          // Default 20s (Adjustable 5s to 40s by 1s)
+      TARGET_SIGNALS: 10,      // Collection goal: 10
+      BASE_SPAWN_INTERVAL: 420,
+      MIN_SPAWN_INTERVAL: 210,
+      BASE_FLOAT_DURATION: 3.5,
+      MIN_FLOAT_DURATION: 1.8
+    };
+
+    const GameState = {
+      isActive: false,
+      score: 0,
+      timeRemaining: CONFIG.TOTAL_TIME,
+      signalsCollected: 0,
+      combo: 0,
+      spawnTimer: null,
+      countdownTimer: null,
+      activeBubbles: new Set()
+    };
+
+    // DOM Elements - Game Screen
+    const gameContainer = document.getElementById('game-container');
+    const timerValEl = document.getElementById('timer-val');
+    const scoreValEl = document.getElementById('score-val');
+    const targetCountEl = document.getElementById('target-count');
+    const progressFillEl = document.getElementById('progress-fill');
+    const comboBadge = document.getElementById('combo-badge');
+    const comboText = document.getElementById('combo-text');
+    const damageFlash = document.getElementById('damage-flash');
+    const speedLinesBg = document.getElementById('speed-lines-bg');
+
+    // DOM Elements - Main Menu
+    const mainMenu = document.getElementById('main-menu');
+    const menuStartBtn = document.getElementById('menu-start-btn');
+    const menuFloatingBubbles = document.getElementById('menu-floating-bubbles');
+    const menuCurrentDurationPill = document.getElementById('menu-current-duration-pill');
+    const openDurationFromPillBtn = document.getElementById('open-duration-from-pill-btn');
+
+    // DOM Elements - Left Corner Time Changer Popup
+    const toggleTimeBtn = document.getElementById('toggle-time-btn');
+    const timePanelPopup = document.getElementById('time-panel-popup');
+    const closeTimePopupBtn = document.getElementById('close-time-popup-btn');
+    const applyTimeBtn = document.getElementById('apply-time-btn');
+    const buttonDurationVal = document.getElementById('button-duration-val');
+    const cornerDurationVal = document.getElementById('corner-duration-val');
+    const cornerDurationMode = document.getElementById('corner-duration-mode');
+    const timeMinusBtn = document.getElementById('time-minus-btn');
+    const timePlusBtn = document.getElementById('time-plus-btn');
+    const timeRangeSlider = document.getElementById('time-range-slider');
+    const quickPresetBtns = document.querySelectorAll('.quick-preset-btn');
+
+    // DOM Elements - How To Play Modal
+    const howToPlayModal = document.getElementById('how-to-play-modal');
+    const howModalBackBtn = document.getElementById('how-modal-back-btn');
+    const howModalStartBtn = document.getElementById('how-modal-start-btn');
+    const howDurationVal = document.getElementById('how-duration-val');
+
+    // DOM Elements - Game Over Screen
+    const endModal = document.getElementById('end-modal');
+    const restartBtn = document.getElementById('restart-btn');
+    const menuBtn = document.getElementById('menu-btn');
+    const inGameMenuBtn = document.getElementById('in-game-menu-btn');
+    const endTitle = document.getElementById('end-title');
+    const endSubtitle = document.getElementById('end-subtitle');
+    const endIcon = document.getElementById('end-icon');
+    const finalScoreEl = document.getElementById('final-score');
+    const finalCollectedEl = document.getElementById('final-collected');
+    const endFeedback = document.getElementById('end-feedback');
+    const goalStatusBadge = document.getElementById('goal-status-badge');
+
+    // Fullscreen Controls
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const menuFsBtn = document.getElementById('menu-fs-btn');
+    const enterIcon = document.getElementById('fullscreen-enter-icon');
+    const exitIcon = document.getElementById('fullscreen-exit-icon');
+
+    function updateFullscreenIcons() {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+      if (enterIcon && exitIcon) {
+        if (isFs) {
+          enterIcon.classList.add('hidden');
+          exitIcon.classList.remove('hidden');
+        } else {
+          enterIcon.classList.remove('hidden');
+          exitIcon.classList.add('hidden');
+        }
+      }
+    }
+
+    function toggleFullscreen() {
+      const doc = document;
+      const docEl = document.documentElement;
+      const isFs = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
+
+      if (!isFs) {
+        if (docEl.requestFullscreen) {
+          docEl.requestFullscreen().catch(() => {});
+        } else if (docEl.webkitRequestFullscreen) {
+          docEl.webkitRequestFullscreen();
+        } else if (docEl.mozRequestFullScreen) {
+          docEl.mozRequestFullScreen();
+        } else if (docEl.msRequestFullscreen) {
+          docEl.msRequestFullscreen();
+        }
+      } else {
+        if (doc.exitFullscreen) {
+          doc.exitFullscreen().catch(() => {});
+        } else if (doc.webkitExitFullscreen) {
+          doc.webkitExitFullscreen();
+        } else if (doc.mozCancelFullScreen) {
+          doc.mozCancelFullScreen();
+        } else if (doc.msExitFullscreen) {
+          doc.msExitFullscreen();
+        }
+      }
+    }
+
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+    if (menuFsBtn) menuFsBtn.addEventListener('click', toggleFullscreen);
+    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+      document.addEventListener(evt, updateFullscreenIcons);
+    });
+
+    /* =========================================================
+       TIME CHANGER POPUP LOGIC (OPENS ON BUTTON CLICK)
+       ========================================================= */
+
+    function getDurationCategory(sec) {
+      if (sec <= 8)  return 'Lightning';
+      if (sec <= 14) return 'Speed';
+      if (sec <= 24) return 'Balanced';
+      if (sec <= 34) return 'Defense';
+      return 'Marathon';
+    }
+
+    function setDuration(seconds, playAudio = true) {
+      const sec = Math.max(5, Math.min(40, parseInt(seconds, 10)));
+      CONFIG.TOTAL_TIME = sec;
+      GameState.timeRemaining = CONFIG.TOTAL_TIME;
+
+      // Update Stepper Value & Button
+      if (cornerDurationVal) cornerDurationVal.textContent = sec;
+      if (buttonDurationVal) buttonDurationVal.textContent = `${sec}s`;
+      if (timeRangeSlider) timeRangeSlider.value = sec;
+      if (cornerDurationMode) cornerDurationMode.textContent = getDurationCategory(sec);
+
+      // Update Center Menu Pill & How To Play Text
+      if (menuCurrentDurationPill) menuCurrentDurationPill.textContent = `${sec}s`;
+      if (howDurationVal) howDurationVal.textContent = `${sec}s`;
+
+      // Update Quick Preset Button Highlight
+      quickPresetBtns.forEach(btn => {
+        const pSec = parseInt(btn.dataset.sec, 10);
+        if (pSec === sec) {
+          btn.className = 'quick-preset-btn active py-3 sm:py-3.5 text-sm sm:text-base font-black rounded-2xl bg-[#f7c93e] text-[#102a51] shadow-lg transition text-center';
+        } else {
+          btn.className = 'quick-preset-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center';
+        }
+      });
+
+      updateHUD();
+
+      if (playAudio) {
+        SoundEngine.init();
+        SoundEngine.playPop(520 + Math.min(250, sec * 8));
+      }
+    }
+
+    function toggleTimePopup(show) {
+      SoundEngine.init();
+      if (!timePanelPopup) return;
+      const willShow = (show !== undefined) ? show : timePanelPopup.classList.contains('hidden');
+      if (willShow) {
+        timePanelPopup.classList.remove('hidden');
+        SoundEngine.playPop(580);
+      } else {
+        timePanelPopup.classList.add('hidden');
+        SoundEngine.playPop(460);
+      }
+    }
+
+    if (toggleTimeBtn) {
+      toggleTimeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTimePopup();
+      });
+    }
+
+    if (openDurationFromPillBtn) {
+      openDurationFromPillBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTimePopup(true);
+      });
+    }
+
+    if (closeTimePopupBtn) {
+      closeTimePopupBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTimePopup(false);
+      });
+    }
+
+    if (applyTimeBtn) {
+      applyTimeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTimePopup(false);
+      });
+    }
+
+    // Close when clicking outside of the popup
+    document.addEventListener('pointerdown', (e) => {
+      if (timePanelPopup && !timePanelPopup.classList.contains('hidden')) {
+        const isClickInside = timePanelPopup.contains(e.target) || 
+                              (toggleTimeBtn && toggleTimeBtn.contains(e.target)) || 
+                              (openDurationFromPillBtn && openDurationFromPillBtn.contains(e.target));
+        if (!isClickInside) {
+          toggleTimePopup(false);
+        }
+      }
+    });
+
+    // Step -1 second
+    timeMinusBtn.addEventListener('click', () => {
+      setDuration(CONFIG.TOTAL_TIME - 1);
+    });
+
+    // Step +1 second
+    timePlusBtn.addEventListener('click', () => {
+      setDuration(CONFIG.TOTAL_TIME + 1);
+    });
+
+    // Slider scrubbing (1s by 1s)
+    timeRangeSlider.addEventListener('input', (e) => {
+      setDuration(e.target.value, false);
+    });
+
+    // Quick presets (5s, 10s, 15s, 20s, 30s, 40s)
+    quickPresetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setDuration(btn.dataset.sec);
+      });
+    });
+
+    /* =========================================================
+       GAME FLOW:
+       Main Menu -> Click START GAME -> How To Play -> Click START GAME -> Actual Game!
+       ========================================================= */
+
+    // Click on animated display toothpaste pack also triggers Start Game
+    const displayToothpasteImg = document.getElementById('display-toothpaste-img');
+    if (displayToothpasteImg && menuStartBtn) {
+      displayToothpasteImg.addEventListener('click', () => {
+        menuStartBtn.click();
+      });
+    }
+
+    // 1. When clicking START GAME on the Main Menu: Show HOW TO PLAY screen
+    menuStartBtn.addEventListener('click', () => {
+      SoundEngine.init();
+      SoundEngine.playPop(620);
+      toggleTimePopup(false);
+      mainMenu.classList.add('hidden');
+      howToPlayModal.classList.remove('hidden');
+      howToPlayModal.classList.add('flex');
+    });
+
+    // Back to Menu from How To Play screen
+    howModalBackBtn.addEventListener('click', () => {
+      SoundEngine.init();
+      SoundEngine.playPop(480);
+      howToPlayModal.classList.add('hidden');
+      howToPlayModal.classList.remove('flex');
+      mainMenu.classList.remove('hidden');
+    });
+
+    // 2. When clicking START GAME on the How To Play screen: Start actual gameplay!
+    howModalStartBtn.addEventListener('click', () => {
+      howToPlayModal.classList.add('hidden');
+      howToPlayModal.classList.remove('flex');
+      startGame();
+    });
+
+    /* =========================================================
+       AMBIENT FLOATING BUBBLES IN MAIN MENU
+       ========================================================= */
+
+    function initMenuBubbles() {
+      if (!menuFloatingBubbles) return;
+      menuFloatingBubbles.innerHTML = '';
+      const bubbleCount = 12;
+
+      for (let i = 0; i < bubbleCount; i++) {
+        const b = document.createElement('div');
+        b.className = 'menu-bubble';
+        const isKiosk = (window.innerWidth || 1080) >= 700;
+        const size = Math.floor((isKiosk ? 45 : 28) + Math.random() * (isKiosk ? 70 : 50));
+        const left = Math.floor(Math.random() * 94);
+        const duration = (7 + Math.random() * 8).toFixed(1);
+        const delay = (Math.random() * 9).toFixed(1);
+        const drift = (Math.random() * 60 - 30).toFixed(0);
+
+        b.style.width = `${size}px`;
+        b.style.height = `${size}px`;
+        b.style.left = `${left}%`;
+        b.style.bottom = '-60px';
+        b.style.animationDuration = `${duration}s`;
+        b.style.animationDelay = `-${delay}s`;
+        b.style.setProperty('--drift-x', `${drift}px`);
+
+        if (i % 2 === 0) {
+          b.innerHTML = '<img src="display.png" alt="" class="w-[85%] h-auto opacity-75 object-contain pointer-events-none select-none -rotate-12" />';
+        }
+
+        menuFloatingBubbles.appendChild(b);
+      }
+    }
+
+    initMenuBubbles();
+
+    /* Helper: Adaptive spawn cadence based on selected TOTAL_TIME */
+    function getAdaptiveConfig() {
+      const t = CONFIG.TOTAL_TIME;
+      if (t <= 6) {
+        return {
+          baseInterval: 180,
+          minInterval: 110,
+          baseFloat: 2.0,
+          minFloat: 1.2,
+          signalRatio: 0.65
+        };
+      } else if (t <= 10) {
+        return {
+          baseInterval: 260,
+          minInterval: 150,
+          baseFloat: 2.5,
+          minFloat: 1.4,
+          signalRatio: 0.60
+        };
+      } else if (t <= 15) {
+        return {
+          baseInterval: 340,
+          minInterval: 180,
+          baseFloat: 3.0,
+          minFloat: 1.6,
+          signalRatio: 0.54
+        };
+      } else {
+        return {
+          baseInterval: CONFIG.BASE_SPAWN_INTERVAL,
+          minInterval: CONFIG.MIN_SPAWN_INTERVAL,
+          baseFloat: CONFIG.BASE_FLOAT_DURATION,
+          minFloat: CONFIG.MIN_FLOAT_DURATION,
+          signalRatio: 0.48
+        };
+      }
+    }
+
+    /* =========================================================
+       ACTUAL GAMEPLAY ENGINE
+       ========================================================= */
+
+    function startGame() {
+      SoundEngine.init();
+
+      // Ensure modals are hidden
+      mainMenu.classList.add('hidden');
+      if (timePanelPopup) timePanelPopup.classList.add('hidden');
+      howToPlayModal.classList.add('hidden');
+      howToPlayModal.classList.remove('flex');
+      endModal.classList.add('hidden');
+      endModal.classList.remove('flex');
+
+      // Reset state
+      GameState.isActive = true;
+      GameState.score = 0;
+      GameState.signalsCollected = 0;
+      GameState.combo = 0;
+      GameState.timeRemaining = CONFIG.TOTAL_TIME;
+
+      // Clear bubbles from container
+      gameContainer.innerHTML = '';
+      GameState.activeBubbles.clear();
+
+      updateHUD();
+      speedLinesBg.classList.remove('speed-lines');
+      speedLinesBg.classList.remove('opacity-100');
+
+      // Main Countdown loop
+      clearInterval(GameState.countdownTimer);
+      GameState.countdownTimer = setInterval(() => {
+        GameState.timeRemaining -= 1;
+        updateHUD();
+
+        // High intensity frenzy when time reaches final stretch
+        const frenzyThreshold = Math.max(2, Math.min(7, Math.floor(CONFIG.TOTAL_TIME * 0.35)));
+        if (GameState.timeRemaining <= frenzyThreshold) {
+          speedLinesBg.classList.add('speed-lines');
+          speedLinesBg.classList.add('opacity-100');
+          timerValEl.classList.add('text-red-400');
+        } else {
+          timerValEl.classList.remove('text-red-400');
+        }
+
+        if (GameState.timeRemaining <= 0) {
+          endGame();
+        }
+      }, 1000);
+
+      // Start rapid bubble spawner
+      scheduleNextSpawn();
+    }
+
+    function scheduleNextSpawn() {
+      if (!GameState.isActive) return;
+
+      spawnBubble();
+
+      const adaptive = getAdaptiveConfig();
+      const progress = (CONFIG.TOTAL_TIME - GameState.timeRemaining) / CONFIG.TOTAL_TIME;
+      const currentInterval = adaptive.baseInterval - (progress * (adaptive.baseInterval - adaptive.minInterval));
+
+      GameState.spawnTimer = setTimeout(scheduleNextSpawn, Math.max(adaptive.minInterval, currentInterval));
+    }
+
+    /* Spawn Bubble with High-Speed Random Variations */
+    function spawnBubble() {
+      if (!GameState.isActive) return;
+
+      const containerWidth = gameContainer.clientWidth || window.innerWidth;
+      const containerHeight = gameContainer.clientHeight || window.innerHeight;
+      const adaptive = getAdaptiveConfig();
+
+      const roll = Math.random();
+      let itemType = 'SIGNAL';
+      let points = 200;
+      let isPenalty = false;
+
+      const signalThreshold = adaptive.signalRatio;
+      const mintThreshold = signalThreshold + (1 - signalThreshold) * 0.45;
+      const toothThreshold = mintThreshold + (1 - signalThreshold) * 0.25;
+
+      if (roll < signalThreshold) {
+        itemType = 'SIGNAL';
+        points = 200;
+      } else if (roll < mintThreshold) {
+        itemType = 'MINT';
+        points = 100;
+      } else if (roll < toothThreshold) {
+        itemType = 'TOOTH';
+        points = 120;
+      } else {
+        itemType = 'GERM';
+        points = -150;
+        isPenalty = true;
+      }
+
+      // Scaled up for 1080x1920 Kiosk Machine Touchscreen
+      const baseScale = Math.min(2.0, Math.max(1.1, containerWidth / 550));
+      // Uniform bubble size across all bubble types (all bubbles same uniform size)
+      const size = Math.round(150 * baseScale);
+      const minX = 10;
+      const maxX = Math.max(10, containerWidth - size - 15);
+      const startX = Math.floor(minX + Math.random() * (maxX - minX));
+
+      const progress = (CONFIG.TOTAL_TIME - GameState.timeRemaining) / CONFIG.TOTAL_TIME;
+      const duration = adaptive.baseFloat - (progress * (adaptive.baseFloat - adaptive.minFloat));
+
+      const bubbleEl = document.createElement('div');
+      bubbleEl.className = `bubble ${itemType === 'SIGNAL' ? 'signal-pack' : ''} ${itemType === 'GERM' ? 'germ-bubble' : ''}`;
+      bubbleEl.style.width = `${size}px`;
+      bubbleEl.style.height = `${size}px`;
+      bubbleEl.style.left = `${startX}px`;
+      bubbleEl.style.bottom = `-${size + 20}px`;
+
+      const content = document.createElement('div');
+      content.className = 'bubble-content';
+      content.innerHTML = SVG_ITEMS[itemType];
+      bubbleEl.appendChild(content);
+
+      const wobbleAmp = 15 + Math.random() * 25;
+      const wobbleFreq = 2 + Math.random() * 2;
+      const startTime = performance.now();
+      const distance = containerHeight + size + 60;
+
+      const bubbleObj = {
+        element: bubbleEl,
+        itemType,
+        points,
+        isPenalty,
+        size,
+        startX,
+        popped: false
+      };
+
+      const handlePop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (bubbleObj.popped || !GameState.isActive) return;
+        bubbleObj.popped = true;
+
+        const rect = bubbleEl.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        onBubblePopped(bubbleObj, centerX, centerY);
+        removeBubble(bubbleObj);
+      };
+
+      bubbleEl.addEventListener('pointerdown', handlePop);
+
+      gameContainer.appendChild(bubbleEl);
+      GameState.activeBubbles.add(bubbleObj);
+
+      function floatAnim(now) {
+        if (!GameState.isActive || bubbleObj.popped) return;
+
+        const elapsed = (now - startTime) / 1000;
+        const t = elapsed / duration;
+
+        if (t >= 1) {
+          removeBubble(bubbleObj);
+          return;
+        }
+
+        const currentY = t * distance;
+        const wobbleX = Math.sin(elapsed * wobbleFreq) * wobbleAmp;
+
+        bubbleEl.style.transform = `translate3d(${wobbleX}px, -${currentY}px, 0)`;
+
+        requestAnimationFrame(floatAnim);
+      }
+
+      requestAnimationFrame(floatAnim);
+    }
+
+    function removeBubble(bubbleObj) {
+      if (bubbleObj.element && bubbleObj.element.parentNode) {
+        bubbleObj.element.remove();
+      }
+      GameState.activeBubbles.delete(bubbleObj);
+    }
+
+    /* Pop Effect & Score Computation */
+    function onBubblePopped(bubble, x, y) {
+      createPopParticles(x, y, bubble.itemType);
+
+      if (bubble.isPenalty) {
+        GameState.combo = 0;
+        GameState.score = Math.max(0, GameState.score + bubble.points);
+        SoundEngine.playGermBuzzer();
+        triggerPenaltyVisuals();
+        showScoreFloat(x, y, `${bubble.points}`, '#EF4444');
+      } else {
+        GameState.combo++;
+        const multiplier = GameState.combo >= 6 ? 3 : (GameState.combo >= 3 ? 2 : 1);
+        const gained = bubble.points * multiplier;
+        GameState.score += gained;
+
+        if (bubble.itemType === 'SIGNAL') {
+          GameState.signalsCollected++;
+          SoundEngine.playPop(750 + Math.min(600, GameState.combo * 40));
+        } else {
+          SoundEngine.playPop(520);
+        }
+
+        if (multiplier > 1) {
+          SoundEngine.playChime(GameState.combo);
+        }
+
+        const scoreText = multiplier > 1 ? `+${gained} (${multiplier}x)` : `+${gained}`;
+        showScoreFloat(x, y, scoreText, bubble.itemType === 'SIGNAL' ? '#FACC15' : '#34D399');
+      }
+
+      updateHUD();
+
+      // Instant win if 10 Signal packs collected
+      if (GameState.signalsCollected >= CONFIG.TARGET_SIGNALS) {
+        endGame(true);
+      }
+    }
+
+    /* Penalty Visual Feedback */
+    function triggerPenaltyVisuals() {
+      document.body.classList.add('shake-screen');
+      setTimeout(() => document.body.classList.remove('shake-screen'), 350);
+
+      damageFlash.style.opacity = '1';
+      setTimeout(() => damageFlash.style.opacity = '0', 220);
+    }
+
+    /* Particle Splash upon Pop */
+    function createPopParticles(x, y, type) {
+      const colors = type === 'SIGNAL' 
+        ? ['#FFFFFF', '#0284C7', '#EF4444', '#38BDF8'] 
+        : (type === 'GERM' ? ['#84CC16', '#65A30D', '#450A0A'] : ['#34D399', '#6EE7B7', '#FFFFFF']);
+
+      const count = 10;
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'pop-particle';
+        const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.4);
+        const dist = 35 + Math.random() * 45;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist;
+        const isKiosk = (window.innerWidth || 1080) >= 700;
+        const pScale = isKiosk ? 1.6 : 1.0;
+        const pSize = (6 + Math.random() * 8) * pScale;
+
+        p.style.width = `${pSize}px`;
+        p.style.height = `${pSize}px`;
+        p.style.left = `${x}px`;
+        p.style.top = `${y}px`;
+        p.style.setProperty('--tx', `${tx}px`);
+        p.style.setProperty('--ty', `${ty}px`);
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 450);
+      }
+    }
+
+    /* Floating Score Popup Text */
+    function showScoreFloat(x, y, text, color) {
+      const floatEl = document.createElement('div');
+      floatEl.textContent = text;
+      floatEl.style.position = 'fixed';
+      floatEl.style.left = `${x - 20}px`;
+      floatEl.style.top = `${y - 15}px`;
+      floatEl.style.color = color;
+      floatEl.style.fontWeight = '900';
+      const isKiosk = (window.innerWidth || 1080) >= 700;
+      floatEl.style.fontSize = isKiosk ? '34px' : '22px';
+      floatEl.style.textShadow = '0 3px 12px rgba(0,0,0,0.65)';
+      floatEl.style.pointerEvents = 'none';
+      floatEl.style.zIndex = '50';
+      floatEl.style.textShadow = '0 2px 8px rgba(0,0,0,0.4)';
+      floatEl.style.transition = 'all 0.6s cubic-bezier(0.1, 0.9, 0.2, 1)';
+      floatEl.style.transform = 'translateY(0) scale(1)';
+
+      document.body.appendChild(floatEl);
+
+      requestAnimationFrame(() => {
+        floatEl.style.transform = 'translateY(-45px) scale(1.25)';
+        floatEl.style.opacity = '0';
+      });
+
+      setTimeout(() => floatEl.remove(), 600);
+    }
+
+    /* Update HUD Metrics based on selected CONFIG */
+    function updateHUD() {
+      const displayTime = GameState.isActive ? Math.max(0, GameState.timeRemaining) : CONFIG.TOTAL_TIME;
+      timerValEl.innerHTML = `${displayTime}<span class="text-xl sm:text-2xl md:text-3xl font-bold ml-1">s</span>`;
+      scoreValEl.textContent = GameState.score.toLocaleString();
+
+      targetCountEl.textContent = GameState.signalsCollected;
+
+      const progressPercent = Math.min(100, (GameState.signalsCollected / CONFIG.TARGET_SIGNALS) * 100);
+      progressFillEl.style.width = `${progressPercent}%`;
+
+      // Combo Pill
+      if (comboBadge && comboText) {
+        if (GameState.combo >= 3) {
+          comboBadge.classList.remove('hidden');
+          const mult = GameState.combo >= 6 ? '3X COMBO' : '2X COMBO';
+          comboText.textContent = mult;
+        } else {
+          comboBadge.classList.add('hidden');
+        }
+      }
+    }
+
+    /* End Game Screen */
+    function endGame(forceWin = false) {
+      GameState.isActive = false;
+      clearInterval(GameState.countdownTimer);
+      clearTimeout(GameState.spawnTimer);
+
+      const hasWon = forceWin || (GameState.signalsCollected >= CONFIG.TARGET_SIGNALS);
+
+      finalScoreEl.textContent = GameState.score.toLocaleString();
+      finalCollectedEl.textContent = `${GameState.signalsCollected} / ${CONFIG.TARGET_SIGNALS}`;
+
+      if (hasWon) {
+        SoundEngine.playWinFanfare();
+        endTitle.textContent = 'Congratulations,';
+        endTitle.className = 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-yellow-300 tracking-normal sm:tracking-wide uppercase drop-shadow-xl leading-tight px-4 max-w-full';
+        endSubtitle.textContent = 'Great job!';
+        endSubtitle.className = 'text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-wide drop-shadow-md';
+        endFeedback.innerHTML = '<span class="block">Your quick reflexes earned you a prize.</span><span class="block text-yellow-300 font-black mt-2 sm:mt-4">Claim your Signal gift now.</span>';
+        
+        if (goalStatusBadge) {
+          goalStatusBadge.textContent = `GOAL ACHIEVED: ${GameState.signalsCollected}/${CONFIG.TARGET_SIGNALS}`;
+        }
+
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 120,
+            spread: 90,
+            origin: { y: 0.5 }
+          });
+        }
+      } else {
+        SoundEngine.playGermBuzzer();
+        endTitle.textContent = 'Fail,';
+        endTitle.className = 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-rose-300 tracking-normal sm:tracking-wide uppercase drop-shadow-xl leading-tight px-4 max-w-full';
+        endSubtitle.textContent = 'Time’s up!';
+        endSubtitle.className = 'text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-wide drop-shadow-md';
+        endFeedback.innerHTML = '<span class="block">We hope you enjoyed Signal Tap \'N\' Zap.</span><span class="block text-sky-200 font-bold mt-2 sm:mt-4">Thank you for participating!</span>';
+
+        if (goalStatusBadge) {
+          goalStatusBadge.textContent = `COLLECTED: ${GameState.signalsCollected}/${CONFIG.TARGET_SIGNALS}`;
+        }
+      }
+
+      endModal.classList.remove('hidden');
+      endModal.classList.add('flex');
+    }
+
+    /* Return to Main Menu */
+    function returnToMainMenu() {
+      GameState.isActive = false;
+      clearInterval(GameState.countdownTimer);
+      clearTimeout(GameState.spawnTimer);
+
+      // Clear bubbles from container
+      gameContainer.innerHTML = '';
+      GameState.activeBubbles.clear();
+
+      // Reset visuals
+      speedLinesBg.classList.remove('speed-lines');
+      speedLinesBg.classList.remove('opacity-100');
+      timerValEl.classList.remove('text-red-400');
+
+      // Hide modals, show main menu
+      if (timePanelPopup) timePanelPopup.classList.add('hidden');
+      endModal.classList.add('hidden');
+      endModal.classList.remove('flex');
+      howToPlayModal.classList.add('hidden');
+      howToPlayModal.classList.remove('flex');
+      mainMenu.classList.remove('hidden');
+
+      // Refresh HUD
+      GameState.signalsCollected = 0;
+      GameState.score = 0;
+      GameState.combo = 0;
+      updateHUD();
+      SoundEngine.playPop(520);
+    }
+
+    // Attach Event Listeners
+    restartBtn.addEventListener('click', startGame);
+    menuBtn.addEventListener('click', returnToMainMenu);
+    inGameMenuBtn.addEventListener('click', returnToMainMenu);
+
+    // Initial setup with default 20s
+    setDuration(20, false);
+
+    // Prevent scrolling or unwanted gesture zooms on mobile within game container
+    document.addEventListener('touchmove', (e) => {
+      if (e.target.closest('#game-container')) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+  </script>
+</body>
+</html>
