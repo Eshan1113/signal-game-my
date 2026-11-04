@@ -52,7 +52,7 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Glossy Bubble Styling with Fresh Water Glow */
+    /* Large, High-Performance Glossy Bubble */
     .bubble {
       position: absolute;
       border-radius: 50%;
@@ -60,89 +60,40 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.35) 25%, rgba(56, 189, 248, 0.25) 55%, rgba(255, 255, 255, 0.7) 100%);
-      box-shadow: 
-        inset 0 0 16px rgba(255, 255, 255, 0.9),
-        inset 5px 5px 10px rgba(255, 255, 255, 0.8),
-        inset -5px -5px 12px rgba(2, 132, 199, 0.45),
-        0 8px 24px rgba(2, 60, 110, 0.28);
-      border: 1.8px solid rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(2px);
-      transition: transform 0.06s ease-out;
+      background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.2) 32%, rgba(56, 189, 248, 0.15) 70%, rgba(255, 255, 255, 0.28) 100%);
+      border: 2.5px solid rgba(255, 255, 255, 0.75);
       will-change: transform;
+      contain: layout style;
+      overflow: hidden;
     }
 
-    /* Special Highlight when carrying Signal Toothpaste: Pulsing Golden/Cyan Aura */
+    /* Hero Brand Pack Bubble - Radiant Gold/Cyan Rim for Brand Promotion */
     .bubble.signal-pack {
-      border: 3px solid rgba(255, 255, 255, 0.98);
-      box-shadow: 
-        inset 0 0 24px rgba(255, 255, 255, 1),
-        0 0 24px rgba(250, 204, 21, 0.8),
-        0 0 45px rgba(56, 189, 248, 0.7);
-      animation: signalAuraPulse 1.6s ease-in-out infinite alternate;
-    }
-    @keyframes signalAuraPulse {
-      0% {
-        box-shadow: 
-          inset 0 0 20px rgba(255, 255, 255, 0.9),
-          0 0 18px rgba(250, 204, 21, 0.6),
-          0 0 35px rgba(56, 189, 248, 0.5);
-      }
-      100% {
-        box-shadow: 
-          inset 0 0 28px rgba(255, 255, 255, 1),
-          0 0 32px rgba(250, 204, 21, 0.95),
-          0 0 55px rgba(56, 189, 248, 0.85);
-      }
-    }
-    .bubble.signal-pack .bubble-content {
-      width: 96%;
-      height: 96%;
+      border: 3.5px solid rgba(255, 255, 255, 0.98);
+      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.48) 0%, rgba(56, 189, 248, 0.25) 55%, rgba(255, 255, 255, 0.18) 100%);
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.8), 0 0 35px rgba(56, 189, 248, 0.5);
     }
 
-    /* Toxic aura for Germ Bubble */
     .bubble.germ-bubble {
-      border: 2px solid rgba(132, 204, 22, 0.8);
-      box-shadow: 
-        inset 0 0 16px rgba(163, 230, 53, 0.4),
-        0 0 16px rgba(101, 163, 13, 0.5);
+      border: 2.5px solid rgba(132, 204, 22, 0.85);
+      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.25) 0%, rgba(101, 163, 13, 0.2) 60%, rgba(69, 10, 10, 0.15) 100%);
+      box-shadow: 0 0 15px rgba(101, 163, 13, 0.5);
     }
 
-    /* Shiny reflection glints */
-    .bubble::before {
-      content: '';
-      position: absolute;
-      top: 14%;
-      left: 18%;
-      width: 28%;
-      height: 20%;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 80%);
-      transform: rotate(-35deg);
-      pointer-events: none;
-    }
-
-    .bubble::after {
-      content: '';
-      position: absolute;
-      bottom: 14%;
-      right: 18%;
-      width: 14%;
-      height: 12%;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 75%);
-      pointer-events: none;
-    }
-
-    /* Floating Item container */
     .bubble-content {
       pointer-events: none;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 85%;
-      height: 85%;
+      width: 82%;
+      height: 82%;
+    }
+    .bubble-content svg {
+      width: 78%;
+      height: 78%;
+      max-width: 78%;
+      max-height: 78%;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
     }
 
     /* Particle splash on pop */
@@ -150,12 +101,13 @@
       position: absolute;
       border-radius: 50%;
       pointer-events: none;
-      background: radial-gradient(circle, #ffffff, rgba(255,255,255,0));
-      animation: popBurst 0.45s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+      background: #ffffff;
+      animation: popBurst 0.35s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+      will-change: transform, opacity;
     }
     @keyframes popBurst {
-      0% { transform: translate(0, 0) scale(1.1); opacity: 1; }
-      100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+      0% { transform: translate3d(0, 0, 0) scale(1.1); opacity: 1; }
+      100% { transform: translate3d(var(--tx), var(--ty), 0) scale(0); opacity: 0; }
     }
 
     /* Screen shake */
@@ -163,21 +115,32 @@
       animation: shakeAnim 0.35s ease-in-out;
     }
     @keyframes shakeAnim {
-      0%, 100% { transform: translate(0, 0); }
-      20% { transform: translate(-10px, 6px); }
-      40% { transform: translate(10px, -6px); }
-      60% { transform: translate(-6px, 4px); }
-      80% { transform: translate(6px, -3px); }
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      20% { transform: translate3d(-10px, 6px, 0); }
+      40% { transform: translate3d(10px, -6px, 0); }
+      60% { transform: translate3d(-6px, 4px, 0); }
+      80% { transform: translate3d(6px, -3px, 0); }
     }
 
     /* Speed Rush Speedlines (when time is low) */
     .speed-lines {
+      overflow: hidden;
+    }
+    .speed-lines::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      left: 0;
+      right: 0;
+      bottom: -100px;
       background: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.06) 40px, rgba(255,255,255,0.06) 45px);
       animation: speedRush 0.3s linear infinite;
+      will-change: transform;
+      pointer-events: none;
     }
     @keyframes speedRush {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 90px; }
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(0, 90px, 0); }
     }
 
     /* Menu Floating Background Bubbles */
@@ -189,12 +152,10 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.25) 30%, rgba(56, 189, 248, 0.2) 65%, rgba(255, 255, 255, 0.5) 100%);
-      box-shadow: 
-        inset 0 0 12px rgba(255, 255, 255, 0.75),
-        0 6px 16px rgba(0, 53, 148, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.65);
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       animation: menuBubbleDrift linear infinite;
+      will-change: transform;
     }
     @keyframes menuBubbleDrift {
       0% {
@@ -262,25 +223,23 @@
       will-change: transform;
     }
 
-    /* Hero Logo 3D Floating & Pulse Animation */
+    /* Hero Logo 3D Floating & Pulse Animation (GPU Composited) */
     @keyframes heroLogoFloat {
       0% {
         transform: translateY(0px) scale(1);
-        filter: drop-shadow(0 10px 20px rgba(0, 53, 148, 0.25));
       }
       50% {
-        transform: translateY(-12px) scale(1.03);
-        filter: drop-shadow(0 22px 32px rgba(0, 53, 148, 0.45));
+        transform: translateY(-8px) scale(1.02);
       }
       100% {
         transform: translateY(0px) scale(1);
-        filter: drop-shadow(0 10px 20px rgba(0, 53, 148, 0.25));
       }
     }
 
     .hero-logo-anim {
       animation: heroLogoFloat 3.2s ease-in-out infinite;
-      will-change: transform, filter;
+      will-change: transform;
+      filter: drop-shadow(0 10px 20px rgba(0, 53, 148, 0.35));
     }
 
     /* Premium 3D Arcade Push Button (Signal Navy Blue from 'S' logo letter, compact to word) */
@@ -706,7 +665,7 @@
 
       <!-- 2. MIDDLE: CLEAN-LOGO (LARGE & CENTERED) -->
       <div class="flex items-center justify-center px-2 flex-1 max-w-[380px]">
-        <img src="logo-clean.png" alt="Signal Tap 'n' Zap" class="h-16 sm:h-22 md:h-26 w-auto object-contain filter drop-shadow-xl select-none hero-logo-anim" />
+        <img src="logo-clean.png" alt="Signal Tap 'n' Zap" class="h-16 sm:h-22 md:h-26 w-auto object-contain filter drop-shadow-md select-none" />
       </div>
 
       <!-- 3. RIGHT: TARGET TOOTHPASTE (display.png) + COUNT /10 -->
@@ -845,76 +804,97 @@
       },
       playPop(freq = 600) {
         if (!this.ctx) return;
-        const now = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now);
-        osc.frequency.exponentialRampToValueAtTime(freq * 1.8, now + 0.04);
-        osc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now);
+          osc.frequency.exponentialRampToValueAtTime(freq * 1.8, now + 0.04);
+          osc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
 
-        gain.gain.setValueAtTime(0.35, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+          gain.gain.setValueAtTime(0.35, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
 
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.onended = () => {
+            try { osc.disconnect(); gain.disconnect(); } catch (e) {}
+          };
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } catch (e) {}
       },
       playChime(count = 1) {
         if (!this.ctx) return;
-        const now = this.ctx.currentTime;
-        const notes = [523.25, 659.25, 783.99, 1046.50, 1318.5]; // C, E, G, C6, E6
-        const freq = notes[Math.min(count, notes.length - 1)];
+        try {
+          const now = this.ctx.currentTime;
+          const notes = [523.25, 659.25, 783.99, 1046.50, 1318.5]; // C, E, G, C6, E6
+          const freq = notes[Math.min(count, notes.length - 1)];
 
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, now);
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now);
 
-        gain.gain.setValueAtTime(0.25, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
 
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.onended = () => {
+            try { osc.disconnect(); gain.disconnect(); } catch (e) {}
+          };
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } catch (e) {}
       },
       playGermBuzzer() {
         if (!this.ctx) return;
-        const now = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
 
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(160, now);
-        osc.frequency.linearRampToValueAtTime(80, now + 0.22);
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(160, now);
+          osc.frequency.linearRampToValueAtTime(80, now + 0.22);
 
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
 
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.22);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.onended = () => {
+            try { osc.disconnect(); gain.disconnect(); } catch (e) {}
+          };
+          osc.start(now);
+          osc.stop(now + 0.22);
+        } catch (e) {}
       },
       playWinFanfare() {
         if (!this.ctx) return;
         const notes = [440, 554, 659, 880];
         notes.forEach((f, i) => {
           setTimeout(() => {
-            const now = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(f, now);
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.35);
+            if (!this.ctx) return;
+            try {
+              const now = this.ctx.currentTime;
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(f, now);
+              gain.gain.setValueAtTime(0.2, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.onended = () => {
+                try { osc.disconnect(); gain.disconnect(); } catch (e) {}
+              };
+              osc.start(now);
+              osc.stop(now + 0.35);
+            } catch (e) {}
           }, i * 110);
         });
       }
@@ -930,48 +910,40 @@
     /* =========================================================
        SVG TEMPLATES FOR GAME ITEMS (USING RUBIK FONT)
        ========================================================= */
+    // Preload brand assets into browser memory for zero-lag instant rendering
+    const _preloadDisplayImg = new Image();
+    _preloadDisplayImg.src = 'display.png';
+    const _preloadLogoImg = new Image();
+    _preloadLogoImg.src = 'logo-clean.png';
+
     const SVG_ITEMS = {
       SIGNAL: `
         <div class="relative w-full h-full flex items-center justify-center select-none pointer-events-none">
-          <!-- Floating Goal Badge -->
-          <div class="absolute -top-3.5 -right-1 bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-400 text-blue-950 font-black text-[11px] sm:text-xs md:text-sm px-2.5 py-0.5 rounded-full shadow-lg border-2 border-white flex items-center gap-1 uppercase tracking-wider animate-bounce select-none">
-            <span>★ GOAL</span>
-          </div>
-
-          <!-- Twinkling Star 1 (Top-Right Gold) -->
-          <svg class="absolute top-2 right-4 w-5 h-5 sm:w-7 sm:h-7 text-yellow-300 drop-shadow animate-pulse" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/>
-          </svg>
-
-          <!-- Twinkling Star 2 (Bottom-Left Cyan) -->
-          <svg class="absolute bottom-2 left-4 w-4 h-4 sm:w-6 sm:h-6 text-sky-300 drop-shadow animate-ping" style="animation-duration: 2s;" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/>
-          </svg>
-
-          <!-- Twinkling Star 3 (Top-Left White Sparkle) -->
-          <svg class="absolute top-3 left-6 w-3 h-3 sm:w-5 sm:h-5 text-white drop-shadow animate-pulse" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/>
-          </svg>
-
-          <!-- 3D Toothpaste Tube -->
-          <img src="display.png" alt="Signal Toothpaste" class="w-[98%] h-auto max-h-[96%] object-contain filter drop-shadow-2xl -rotate-12 scale-105" />
+          <!-- Prominent Real Brand Product Artwork (Cleanly framed with balanced padding inside bubble) -->
+          <img 
+            src="display.png" 
+            alt="Signal Toothpaste" 
+            class="w-[76%] max-w-[76%] h-auto max-h-[70%] object-contain -rotate-12 transform select-none drop-shadow-sm" 
+            loading="eager" 
+            decoding="async" 
+          />
         </div>
       `,
       MINT: `
-        <svg class="w-14 h-14 drop-shadow" viewBox="0 0 80 80" fill="none">
+        <svg viewBox="14 12 52 60" fill="none" class="w-full h-full">
           <path d="M40 70 C20 60 10 35 25 15 C45 20 60 35 40 70 Z" fill="#10B981"/>
           <path d="M40 70 C60 60 70 35 55 15 C35 20 20 35 40 70 Z" fill="#059669"/>
-          <path d="M40 70 L40 20" stroke="#D1FAE5" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M40 45 Q30 35 24 38" stroke="#D1FAE5" stroke-width="1.8"/>
-          <path d="M40 52 Q50 42 56 46" stroke="#D1FAE5" stroke-width="1.8"/>
-          <circle cx="34" cy="24" r="3" fill="#FFFFFF" fill-opacity="0.8"/>
-          <circle cx="48" cy="34" r="2" fill="#FFFFFF" fill-opacity="0.8"/>
+          <path d="M40 70 L40 20" stroke="#D1FAE5" stroke-width="2.8" stroke-linecap="round"/>
+          <path d="M40 45 Q30 35 24 38" stroke="#D1FAE5" stroke-width="2"/>
+          <path d="M40 52 Q50 42 56 46" stroke="#D1FAE5" stroke-width="2"/>
+          <circle cx="34" cy="24" r="3.5" fill="#FFFFFF" fill-opacity="0.9"/>
+          <circle cx="48" cy="34" r="2.5" fill="#FFFFFF" fill-opacity="0.9"/>
         </svg>
       `,
 
       TOOTH: `
-        <svg class="w-14 h-14 drop-shadow-lg" viewBox="0 0 80 80" fill="none">
-          <path d="M22 20 C18 35 20 62 28 65 C34 67 36 48 40 48 C44 48 46 67 52 65 C60 62 62 35 58 20 C54 10 46 12 40 16 C34 12 26 10 22 20 Z" fill="#FFFFFF" stroke="#38BDF8" stroke-width="2"/>
+        <svg viewBox="12 8 54 62" fill="none" class="w-full h-full">
+          <path d="M22 20 C18 35 20 62 28 65 C34 67 36 48 40 48 C44 48 46 67 52 65 C60 62 62 35 58 20 C54 10 46 12 40 16 C34 12 26 10 22 20 Z" fill="#FFFFFF" stroke="#38BDF8" stroke-width="2.5"/>
           <path d="M26 24 C24 30 25 42 27 48" stroke="#E0F2FE" stroke-width="3" stroke-linecap="round"/>
           <path d="M56 12 L58 17 L63 19 L58 21 L56 26 L54 21 L49 19 L54 17 Z" fill="#FACC15"/>
           <path d="M18 42 L19 45 L22 46 L19 47 L18 50 L17 47 L14 46 L17 45 Z" fill="#FACC15"/>
@@ -979,26 +951,26 @@
       `,
 
       GERM: `
-        <svg class="w-16 h-16 drop-shadow-xl" viewBox="0 0 100 100" fill="none">
+        <svg viewBox="6 6 88 88" fill="none" class="w-full h-full">
           <g>
-            <circle cx="50" cy="12" r="6" fill="#65A30D"/>
-            <circle cx="50" cy="88" r="6" fill="#65A30D"/>
-            <circle cx="12" cy="50" r="6" fill="#65A30D"/>
-            <circle cx="88" cy="50" r="6" fill="#65A30D"/>
-            <circle cx="23" cy="23" r="5" fill="#65A30D"/>
-            <circle cx="77" cy="23" r="5" fill="#65A30D"/>
-            <circle cx="23" cy="77" r="5" fill="#65A30D"/>
-            <circle cx="77" cy="77" r="5" fill="#65A30D"/>
+            <circle cx="50" cy="12" r="6.5" fill="#65A30D"/>
+            <circle cx="50" cy="88" r="6.5" fill="#65A30D"/>
+            <circle cx="12" cy="50" r="6.5" fill="#65A30D"/>
+            <circle cx="88" cy="50" r="6.5" fill="#65A30D"/>
+            <circle cx="23" cy="23" r="5.5" fill="#65A30D"/>
+            <circle cx="77" cy="23" r="5.5" fill="#65A30D"/>
+            <circle cx="23" cy="77" r="5.5" fill="#65A30D"/>
+            <circle cx="77" cy="77" r="5.5" fill="#65A30D"/>
             <rect x="46" y="10" width="8" height="80" rx="4" fill="#84CC16"/>
             <rect x="10" y="46" width="80" height="8" rx="4" fill="#84CC16"/>
             <line x1="23" y1="23" x2="77" y2="77" stroke="#84CC16" stroke-width="8" stroke-linecap="round"/>
             <line x1="77" y1="23" x2="23" y2="77" stroke="#84CC16" stroke-width="8" stroke-linecap="round"/>
             <circle cx="50" cy="50" r="32" fill="#84CC16"/>
             <circle cx="50" cy="50" r="28" fill="#65A30D"/>
-            <ellipse cx="40" cy="42" rx="7" ry="8" fill="#FFFFFF"/>
-            <circle cx="41" cy="43" r="3.5" fill="#1C1917"/>
-            <ellipse cx="60" cy="42" rx="7" ry="8" fill="#FFFFFF"/>
-            <circle cx="59" cy="43" r="3.5" fill="#1C1917"/>
+            <ellipse cx="40" cy="42" rx="7.5" ry="8.5" fill="#FFFFFF"/>
+            <circle cx="41" cy="43" r="3.8" fill="#1C1917"/>
+            <ellipse cx="60" cy="42" rx="7.5" ry="8.5" fill="#FFFFFF"/>
+            <circle cx="59" cy="43" r="3.8" fill="#1C1917"/>
             <path d="M33 34 L47 39" stroke="#365314" stroke-width="3" stroke-linecap="round"/>
             <path d="M67 34 L53 39" stroke="#365314" stroke-width="3" stroke-linecap="round"/>
             <path d="M38 56 Q50 50 62 56 Q50 68 38 56 Z" fill="#450A0A"/>
@@ -1302,7 +1274,7 @@
     function initMenuBubbles() {
       if (!menuFloatingBubbles) return;
       menuFloatingBubbles.innerHTML = '';
-      const bubbleCount = 12;
+      const bubbleCount = 6;
 
       for (let i = 0; i < bubbleCount; i++) {
         const b = document.createElement('div');
@@ -1323,7 +1295,7 @@
         b.style.setProperty('--drift-x', `${drift}px`);
 
         if (i % 2 === 0) {
-          b.innerHTML = '<img src="display.png" alt="" class="w-[85%] h-auto opacity-75 object-contain pointer-events-none select-none -rotate-12" />';
+          b.innerHTML = '<svg viewBox="0 0 80 120" fill="none" style="width:60%;height:auto;opacity:0.5;pointer-events:none;transform:rotate(-12deg)"><rect x="20" y="8" width="40" height="85" rx="8" fill="#FFF" stroke="#0284C7" stroke-width="2"/><rect x="20" y="8" width="40" height="28" rx="8" fill="#E52320"/><rect x="20" y="32" width="40" height="20" fill="#0284C7"/><rect x="30" y="0" width="20" height="12" rx="4" fill="#E0E0E0"/></svg>';
         }
 
         menuFloatingBubbles.appendChild(b);
@@ -1374,6 +1346,40 @@
        ACTUAL GAMEPLAY ENGINE
        ========================================================= */
 
+    let gameLoopId = null;
+
+    /* Centralized High-Performance Game Animation Loop (Single rAF) */
+    function gameLoop(now) {
+      if (!GameState.isActive) {
+        gameLoopId = null;
+        return;
+      }
+
+      const expired = [];
+      for (const b of GameState.activeBubbles) {
+        if (b.popped) continue;
+
+        const elapsed = (now - b.startTime) / 1000;
+        const t = elapsed / b.duration;
+
+        if (t >= 1) {
+          expired.push(b);
+          continue;
+        }
+
+        const currentY = t * b.distance;
+        const wobbleX = Math.sin(elapsed * b.wobbleFreq) * b.wobbleAmp;
+
+        b.element.style.transform = `translate3d(${wobbleX}px, -${currentY}px, 0)`;
+      }
+
+      for (let i = 0; i < expired.length; i++) {
+        removeBubble(expired[i]);
+      }
+
+      gameLoopId = requestAnimationFrame(gameLoop);
+    }
+
     function startGame() {
       SoundEngine.init();
 
@@ -1384,6 +1390,14 @@
       howToPlayModal.classList.remove('flex');
       endModal.classList.add('hidden');
       endModal.classList.remove('flex');
+
+      // Clear existing game intervals & animation loops
+      clearInterval(GameState.countdownTimer);
+      clearTimeout(GameState.spawnTimer);
+      if (gameLoopId) {
+        cancelAnimationFrame(gameLoopId);
+        gameLoopId = null;
+      }
 
       // Reset state
       GameState.isActive = true;
@@ -1400,8 +1414,10 @@
       speedLinesBg.classList.remove('speed-lines');
       speedLinesBg.classList.remove('opacity-100');
 
+      // Start central master animation loop
+      gameLoopId = requestAnimationFrame(gameLoop);
+
       // Main Countdown loop
-      clearInterval(GameState.countdownTimer);
       GameState.countdownTimer = setInterval(() => {
         GameState.timeRemaining -= 1;
         updateHUD();
@@ -1441,6 +1457,13 @@
     function spawnBubble() {
       if (!GameState.isActive) return;
 
+      // Maintain optimal bubble density to ensure 60 FPS performance
+      const MAX_ACTIVE_BUBBLES = 10;
+      if (GameState.activeBubbles.size >= MAX_ACTIVE_BUBBLES) {
+        GameState.spawnTimer = setTimeout(scheduleNextSpawn, 150);
+        return;
+      }
+
       const containerWidth = gameContainer.clientWidth || window.innerWidth;
       const containerHeight = gameContainer.clientHeight || window.innerHeight;
       const adaptive = getAdaptiveConfig();
@@ -1471,8 +1494,9 @@
 
       // Scaled up for 1080x1920 Kiosk Machine Touchscreen
       const baseScale = Math.min(2.0, Math.max(1.1, containerWidth / 550));
-      // Uniform bubble size across all bubble types (all bubbles same uniform size)
-      const size = Math.round(150 * baseScale);
+      // Enlarged, high-visibility sizes across ALL game bubble items (Signal, Mint, Tooth, Germ)
+      const baseSize = (itemType === 'SIGNAL') ? 185 : 170;
+      const size = Math.round(baseSize * baseScale);
       const minX = 10;
       const maxX = Math.max(10, containerWidth - size - 15);
       const startX = Math.floor(minX + Math.random() * (maxX - minX));
@@ -1504,7 +1528,12 @@
         isPenalty,
         size,
         startX,
-        popped: false
+        popped: false,
+        startTime,
+        duration,
+        distance,
+        wobbleAmp,
+        wobbleFreq
       };
 
       const handlePop = (e) => {
@@ -1525,27 +1554,6 @@
 
       gameContainer.appendChild(bubbleEl);
       GameState.activeBubbles.add(bubbleObj);
-
-      function floatAnim(now) {
-        if (!GameState.isActive || bubbleObj.popped) return;
-
-        const elapsed = (now - startTime) / 1000;
-        const t = elapsed / duration;
-
-        if (t >= 1) {
-          removeBubble(bubbleObj);
-          return;
-        }
-
-        const currentY = t * distance;
-        const wobbleX = Math.sin(elapsed * wobbleFreq) * wobbleAmp;
-
-        bubbleEl.style.transform = `translate3d(${wobbleX}px, -${currentY}px, 0)`;
-
-        requestAnimationFrame(floatAnim);
-      }
-
-      requestAnimationFrame(floatAnim);
     }
 
     function removeBubble(bubbleObj) {
@@ -1596,8 +1604,8 @@
 
     /* Penalty Visual Feedback */
     function triggerPenaltyVisuals() {
-      document.body.classList.add('shake-screen');
-      setTimeout(() => document.body.classList.remove('shake-screen'), 350);
+      gameContainer.classList.add('shake-screen');
+      setTimeout(() => gameContainer.classList.remove('shake-screen'), 350);
 
       damageFlash.style.opacity = '1';
       setTimeout(() => damageFlash.style.opacity = '0', 220);
@@ -1609,28 +1617,34 @@
         ? ['#FFFFFF', '#0284C7', '#EF4444', '#38BDF8'] 
         : (type === 'GERM' ? ['#84CC16', '#65A30D', '#450A0A'] : ['#34D399', '#6EE7B7', '#FFFFFF']);
 
-      const count = 10;
+      const cRect = gameContainer.getBoundingClientRect();
+      const relX = x - cRect.left;
+      const relY = y - cRect.top;
+
+      const count = 4;
       for (let i = 0; i < count; i++) {
         const p = document.createElement('div');
         p.className = 'pop-particle';
         const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.4);
-        const dist = 35 + Math.random() * 45;
+        const dist = 30 + Math.random() * 35;
         const tx = Math.cos(angle) * dist;
         const ty = Math.sin(angle) * dist;
         const isKiosk = (window.innerWidth || 1080) >= 700;
-        const pScale = isKiosk ? 1.6 : 1.0;
-        const pSize = (6 + Math.random() * 8) * pScale;
+        const pScale = isKiosk ? 1.4 : 1.0;
+        const pSize = (5 + Math.random() * 6) * pScale;
 
         p.style.width = `${pSize}px`;
         p.style.height = `${pSize}px`;
-        p.style.left = `${x}px`;
-        p.style.top = `${y}px`;
+        p.style.left = `${relX}px`;
+        p.style.top = `${relY}px`;
         p.style.setProperty('--tx', `${tx}px`);
         p.style.setProperty('--ty', `${ty}px`);
-        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.background = colors[i % colors.length];
 
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 450);
+        gameContainer.appendChild(p);
+        setTimeout(() => {
+          if (p.parentNode) p.remove();
+        }, 360);
       }
     }
 
@@ -1638,28 +1652,35 @@
     function showScoreFloat(x, y, text, color) {
       const floatEl = document.createElement('div');
       floatEl.textContent = text;
-      floatEl.style.position = 'fixed';
-      floatEl.style.left = `${x - 20}px`;
-      floatEl.style.top = `${y - 15}px`;
+      floatEl.style.position = 'absolute';
+
+      const cRect = gameContainer.getBoundingClientRect();
+      const relX = x - cRect.left;
+      const relY = y - cRect.top;
+
+      floatEl.style.left = `${relX - 20}px`;
+      floatEl.style.top = `${relY - 15}px`;
       floatEl.style.color = color;
       floatEl.style.fontWeight = '900';
       const isKiosk = (window.innerWidth || 1080) >= 700;
-      floatEl.style.fontSize = isKiosk ? '34px' : '22px';
-      floatEl.style.textShadow = '0 3px 12px rgba(0,0,0,0.65)';
+      floatEl.style.fontSize = isKiosk ? '32px' : '22px';
       floatEl.style.pointerEvents = 'none';
       floatEl.style.zIndex = '50';
-      floatEl.style.textShadow = '0 2px 8px rgba(0,0,0,0.4)';
-      floatEl.style.transition = 'all 0.6s cubic-bezier(0.1, 0.9, 0.2, 1)';
-      floatEl.style.transform = 'translateY(0) scale(1)';
+      floatEl.style.textShadow = '0 2px 8px rgba(0,0,0,0.5)';
+      floatEl.style.willChange = 'transform, opacity';
+      floatEl.style.transition = 'transform 0.5s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.5s ease-out';
+      floatEl.style.transform = 'translate3d(0, 0, 0) scale(1)';
 
-      document.body.appendChild(floatEl);
+      gameContainer.appendChild(floatEl);
 
       requestAnimationFrame(() => {
-        floatEl.style.transform = 'translateY(-45px) scale(1.25)';
+        floatEl.style.transform = 'translate3d(0, -45px, 0) scale(1.2)';
         floatEl.style.opacity = '0';
       });
 
-      setTimeout(() => floatEl.remove(), 600);
+      setTimeout(() => {
+        if (floatEl.parentNode) floatEl.remove();
+      }, 520);
     }
 
     /* Update HUD Metrics based on selected CONFIG */
@@ -1690,6 +1711,14 @@
       GameState.isActive = false;
       clearInterval(GameState.countdownTimer);
       clearTimeout(GameState.spawnTimer);
+      if (gameLoopId) {
+        cancelAnimationFrame(gameLoopId);
+        gameLoopId = null;
+      }
+
+      // Clean up remaining floating bubbles immediately
+      gameContainer.innerHTML = '';
+      GameState.activeBubbles.clear();
 
       const hasWon = forceWin || (GameState.signalsCollected >= CONFIG.TARGET_SIGNALS);
 
@@ -1737,6 +1766,10 @@
       GameState.isActive = false;
       clearInterval(GameState.countdownTimer);
       clearTimeout(GameState.spawnTimer);
+      if (gameLoopId) {
+        cancelAnimationFrame(gameLoopId);
+        gameLoopId = null;
+      }
 
       // Clear bubbles from container
       gameContainer.innerHTML = '';
