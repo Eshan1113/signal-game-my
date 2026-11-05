@@ -390,6 +390,80 @@
       <!-- Top-Right: Time Selector Button & Fullscreen Button -->
       <div class="relative flex items-center gap-3 sm:gap-4">
         
+        <!-- TARGET GOAL BUTTON & POPUP -->
+        <div class="relative">
+          <button 
+            id="toggle-target-btn" 
+            type="button" 
+            aria-label="Change Target Goal" 
+            title="Change Target Goal"
+            class="bg-[#0b1f3c]/90 hover:bg-[#122e57] active:scale-95 px-4 py-3 sm:px-7 sm:py-4 rounded-2xl sm:rounded-3xl border border-white/25 shadow-xl flex items-center gap-2 sm:gap-3 cursor-pointer transition text-base sm:text-xl font-bold select-none"
+          >
+            <span class="text-sky-300">Goal:</span>
+            <span id="button-target-val" class="text-yellow-300 font-black text-xl sm:text-2xl">15</span>
+          </button>
+
+          <!-- TARGET GOAL POPUP CARD (MATCHING TIME POPUP DESIGN) -->
+          <div 
+            id="target-panel-popup" 
+            class="hidden absolute top-full right-0 mt-4 z-50 bg-[#0f284e] p-6 sm:p-8 rounded-[36px] border border-sky-400/30 shadow-[0_25px_70px_rgba(0,0,0,0.75)] flex flex-col gap-4 sm:gap-5 w-[380px] sm:w-[480px] max-w-[95vw] transition-all"
+          >
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-1">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl select-none">🎯</span>
+                <span class="text-lg sm:text-xl font-black uppercase tracking-wider text-white">COLLECT GOAL</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span id="corner-target-mode" class="text-xs sm:text-sm font-black px-3.5 py-1 rounded-xl border-2 border-[#f7c93e] text-[#f7c93e] bg-[#f7c93e]/10 uppercase tracking-wide">
+                  CHALLENGE
+                </span>
+                <button id="close-target-popup-btn" aria-label="Close" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-90 flex items-center justify-center text-sm sm:text-base text-white font-bold transition cursor-pointer">
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <!-- Stepper Container: [-] [ 15 PACKS ] [+] -->
+            <div class="bg-[#0a1e3a] rounded-3xl p-3 sm:p-4 flex items-center justify-between gap-3 border border-white/10 shadow-inner">
+              <button id="target-minus-btn" type="button" aria-label="Decrease 1 target" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#1b3a6b] hover:bg-[#234b88] active:scale-90 text-white font-black text-3xl sm:text-4xl flex items-center justify-center transition cursor-pointer select-none shadow">
+                −
+              </button>
+              
+              <div class="flex-1 text-center flex items-baseline justify-center gap-2">
+                <span id="corner-target-val" class="text-4xl sm:text-5xl md:text-6xl font-black text-[#f7c93e] leading-none">15</span>
+                <span class="text-base sm:text-lg font-black text-[#7fb2e5] uppercase">PACKS</span>
+              </div>
+              
+              <button id="target-plus-btn" type="button" aria-label="Increase 1 target" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#1b3a6b] hover:bg-[#234b88] active:scale-90 text-white font-black text-3xl sm:text-4xl flex items-center justify-center transition cursor-pointer select-none shadow">
+                +
+              </button>
+            </div>
+
+            <!-- Slider (5 to 30) -->
+            <div class="w-full flex items-center gap-3 py-1.5 text-sm sm:text-base text-[#7fb2e5] font-black">
+              <span>5</span>
+              <input id="target-range-slider" type="range" min="5" max="30" step="1" value="15" class="custom-time-slider cursor-pointer">
+              <span>30</span>
+            </div>
+
+            <!-- Quick Presets -->
+            <div class="grid grid-cols-6 gap-2 pt-1">
+              <button type="button" class="quick-target-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center" data-goal="5">5</button>
+              <button type="button" class="quick-target-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center" data-goal="8">8</button>
+              <button type="button" class="quick-target-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center" data-goal="10">10</button>
+              <button type="button" class="quick-target-btn active py-3 sm:py-3.5 text-sm sm:text-base font-black rounded-2xl bg-[#f7c93e] text-[#102a51] shadow-lg transition text-center" data-goal="15">15</button>
+              <button type="button" class="quick-target-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center" data-goal="20">20</button>
+              <button type="button" class="quick-target-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center" data-goal="25">25</button>
+            </div>
+
+            <!-- Done Button -->
+            <button id="apply-target-btn" type="button" class="w-full mt-2 py-3.5 sm:py-4 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-blue-950 font-black text-sm sm:text-base uppercase tracking-wider rounded-2xl shadow active:scale-95 transition cursor-pointer">
+              Done
+            </button>
+          </div>
+        </div>
+
         <!-- TIME BUTTON & POPUP -->
         <div class="relative">
           <button 
@@ -397,7 +471,7 @@
             type="button" 
             aria-label="Change Duration" 
             title="Change Duration"
-            class="bg-[#0b1f3c]/90 hover:bg-[#122e57] active:scale-95 px-5 py-3 sm:px-7 sm:py-4 rounded-2xl sm:rounded-3xl border border-white/25 shadow-xl flex items-center gap-3 cursor-pointer transition text-base sm:text-xl font-bold select-none"
+            class="bg-[#0b1f3c]/90 hover:bg-[#122e57] active:scale-95 px-4 py-3 sm:px-7 sm:py-4 rounded-2xl sm:rounded-3xl border border-white/25 shadow-xl flex items-center gap-2 sm:gap-3 cursor-pointer transition text-base sm:text-xl font-bold select-none"
           >
             <span class="text-sky-300">Time:</span>
             <span id="button-duration-val" class="text-yellow-300 font-black text-xl sm:text-2xl">20s</span>
@@ -592,9 +666,9 @@
           Ready, set, tap!
         </p>
 
-        <!-- Instruction: Collect 10 Signal toothpastes as fast as you can to unlock your reward. -->
+        <!-- Instruction: Dynamic Signal collection goal -->
         <p class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-slate-700 font-bold max-w-[900px] leading-snug sm:leading-normal">
-          Collect <strong class="text-[#002d72] font-black underline decoration-sky-400">10 Signal toothpastes</strong> as fast as you can to unlock your reward.
+          Collect <strong class="text-[#002d72] font-black underline decoration-sky-400"><span id="how-target-val">15</span> Signal toothpastes</strong> as fast as you can to unlock your reward.
         </p>
 
         <!-- Time Pill with ID how-duration-val preserved -->
@@ -677,7 +751,7 @@
           <span class="text-xs sm:text-sm md:text-base text-sky-200 font-black uppercase tracking-wider">Collected</span>
           <div class="flex items-baseline gap-1">
             <span id="target-count" class="text-3xl sm:text-5xl md:text-6xl font-black text-yellow-300 drop-shadow">0</span>
-            <span class="text-2xl sm:text-3xl md:text-4xl font-black text-white/90">/10</span>
+            <span id="target-max-val" class="text-2xl sm:text-3xl md:text-4xl font-black text-white/90">/15</span>
           </div>
         </div>
       </div>
@@ -980,7 +1054,7 @@
        ========================================================= */
     const CONFIG = {
       TOTAL_TIME: 20,          // Default 20s (Adjustable 5s to 40s by 1s)
-      TARGET_SIGNALS: 10,      // Collection goal: 10
+      TARGET_SIGNALS: 15,      // Collection goal: 15 (Default updated)
       BASE_SPAWN_INTERVAL: 420,
       MIN_SPAWN_INTERVAL: 210,
       BASE_FLOAT_DURATION: 3.5,
@@ -1016,7 +1090,21 @@
     const menuCurrentDurationPill = document.getElementById('menu-current-duration-pill');
     const openDurationFromPillBtn = document.getElementById('open-duration-from-pill-btn');
 
-    // DOM Elements - Left Corner Time Changer Popup
+    // DOM Elements - Target Goal Changer Popup
+    const toggleTargetBtn = document.getElementById('toggle-target-btn');
+    const targetPanelPopup = document.getElementById('target-panel-popup');
+    const closeTargetPopupBtn = document.getElementById('close-target-popup-btn');
+    const applyTargetBtn = document.getElementById('apply-target-btn');
+    const buttonTargetVal = document.getElementById('button-target-val');
+    const cornerTargetVal = document.getElementById('corner-target-val');
+    const cornerTargetMode = document.getElementById('corner-target-mode');
+    const targetMinusBtn = document.getElementById('target-minus-btn');
+    const targetPlusBtn = document.getElementById('target-plus-btn');
+    const targetRangeSlider = document.getElementById('target-range-slider');
+    const quickTargetPresetBtns = document.querySelectorAll('.quick-target-btn');
+    const targetMaxValEl = document.getElementById('target-max-val');
+
+    // DOM Elements - Time Changer Popup
     const toggleTimeBtn = document.getElementById('toggle-time-btn');
     const timePanelPopup = document.getElementById('time-panel-popup');
     const closeTimePopupBtn = document.getElementById('close-time-popup-btn');
@@ -1034,6 +1122,7 @@
     const howModalBackBtn = document.getElementById('how-modal-back-btn');
     const howModalStartBtn = document.getElementById('how-modal-start-btn');
     const howDurationVal = document.getElementById('how-duration-val');
+    const howTargetValEl = document.getElementById('how-target-val');
 
     // DOM Elements - Game Over Screen
     const endModal = document.getElementById('end-modal');
@@ -1102,6 +1191,113 @@
     });
 
     /* =========================================================
+       TARGET GOAL CHANGER POPUP LOGIC
+       ========================================================= */
+
+    function getTargetCategory(goal) {
+      if (goal <= 8)  return 'Quick';
+      if (goal <= 12) return 'Standard';
+      if (goal <= 18) return 'Challenge';
+      if (goal <= 24) return 'Expert';
+      return 'Master';
+    }
+
+    function setTargetGoal(target, playAudio = true) {
+      const goal = Math.max(5, Math.min(30, parseInt(target, 10)));
+      CONFIG.TARGET_SIGNALS = goal;
+
+      // Update Stepper Value & Button
+      if (cornerTargetVal) cornerTargetVal.textContent = goal;
+      if (buttonTargetVal) buttonTargetVal.textContent = goal;
+      if (targetRangeSlider) targetRangeSlider.value = goal;
+      if (cornerTargetMode) cornerTargetMode.textContent = getTargetCategory(goal);
+
+      // Update In-Game HUD max indicator and How To Play Text
+      if (targetMaxValEl) targetMaxValEl.textContent = `/${goal}`;
+      if (howTargetValEl) howTargetValEl.textContent = goal;
+
+      // Update Quick Preset Button Highlight
+      if (quickTargetPresetBtns) {
+        quickTargetPresetBtns.forEach(btn => {
+          const pGoal = parseInt(btn.dataset.goal, 10);
+          if (pGoal === goal) {
+            btn.className = 'quick-target-btn active py-3 sm:py-3.5 text-sm sm:text-base font-black rounded-2xl bg-[#f7c93e] text-[#102a51] shadow-lg transition text-center';
+          } else {
+            btn.className = 'quick-target-btn py-3 sm:py-3.5 text-sm sm:text-base font-bold rounded-2xl bg-[#17345e] hover:bg-[#20457d] text-[#7fb2e5] transition text-center';
+          }
+        });
+      }
+
+      updateHUD();
+
+      if (playAudio) {
+        SoundEngine.init();
+        SoundEngine.playPop(560 + Math.min(220, goal * 8));
+      }
+    }
+
+    function toggleTargetPopup(show) {
+      SoundEngine.init();
+      if (!targetPanelPopup) return;
+      const willShow = (show !== undefined) ? show : targetPanelPopup.classList.contains('hidden');
+      if (willShow) {
+        if (timePanelPopup) timePanelPopup.classList.add('hidden');
+        targetPanelPopup.classList.remove('hidden');
+        SoundEngine.playPop(580);
+      } else {
+        targetPanelPopup.classList.add('hidden');
+        SoundEngine.playPop(460);
+      }
+    }
+
+    if (toggleTargetBtn) {
+      toggleTargetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTargetPopup();
+      });
+    }
+
+    if (closeTargetPopupBtn) {
+      closeTargetPopupBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTargetPopup(false);
+      });
+    }
+
+    if (applyTargetBtn) {
+      applyTargetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTargetPopup(false);
+      });
+    }
+
+    if (targetMinusBtn) {
+      targetMinusBtn.addEventListener('click', () => {
+        setTargetGoal(CONFIG.TARGET_SIGNALS - 1);
+      });
+    }
+
+    if (targetPlusBtn) {
+      targetPlusBtn.addEventListener('click', () => {
+        setTargetGoal(CONFIG.TARGET_SIGNALS + 1);
+      });
+    }
+
+    if (targetRangeSlider) {
+      targetRangeSlider.addEventListener('input', (e) => {
+        setTargetGoal(e.target.value, false);
+      });
+    }
+
+    if (quickTargetPresetBtns) {
+      quickTargetPresetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          setTargetGoal(btn.dataset.goal);
+        });
+      });
+    }
+
+    /* =========================================================
        TIME CHANGER POPUP LOGIC (OPENS ON BUTTON CLICK)
        ========================================================= */
 
@@ -1151,6 +1347,7 @@
       if (!timePanelPopup) return;
       const willShow = (show !== undefined) ? show : timePanelPopup.classList.contains('hidden');
       if (willShow) {
+        if (targetPanelPopup) targetPanelPopup.classList.add('hidden');
         timePanelPopup.classList.remove('hidden');
         SoundEngine.playPop(580);
       } else {
@@ -1187,7 +1384,7 @@
       });
     }
 
-    // Close when clicking outside of the popup
+    // Close when clicking outside of the popups
     document.addEventListener('pointerdown', (e) => {
       if (timePanelPopup && !timePanelPopup.classList.contains('hidden')) {
         const isClickInside = timePanelPopup.contains(e.target) || 
@@ -1195,6 +1392,13 @@
                               (openDurationFromPillBtn && openDurationFromPillBtn.contains(e.target));
         if (!isClickInside) {
           toggleTimePopup(false);
+        }
+      }
+      if (targetPanelPopup && !targetPanelPopup.classList.contains('hidden')) {
+        const isClickInside = targetPanelPopup.contains(e.target) || 
+                              (toggleTargetBtn && toggleTargetBtn.contains(e.target));
+        if (!isClickInside) {
+          toggleTargetPopup(false);
         }
       }
     });
@@ -1379,6 +1583,7 @@
       // Ensure modals are hidden
       mainMenu.classList.add('hidden');
       if (timePanelPopup) timePanelPopup.classList.add('hidden');
+      if (targetPanelPopup) targetPanelPopup.classList.add('hidden');
       howToPlayModal.classList.add('hidden');
       howToPlayModal.classList.remove('flex');
       endModal.classList.add('hidden');
@@ -1775,6 +1980,7 @@
 
       // Hide modals, show main menu
       if (timePanelPopup) timePanelPopup.classList.add('hidden');
+      if (targetPanelPopup) targetPanelPopup.classList.add('hidden');
       endModal.classList.add('hidden');
       endModal.classList.remove('flex');
       howToPlayModal.classList.add('hidden');
@@ -1794,8 +2000,9 @@
     menuBtn.addEventListener('click', returnToMainMenu);
     inGameMenuBtn.addEventListener('click', returnToMainMenu);
 
-    // Initial setup with default 20s
+    // Initial setup with default 20s & 15 targets
     setDuration(20, false);
+    setTargetGoal(15, false);
 
     // Prevent scrolling or unwanted gesture zooms on mobile within game container
     document.addEventListener('touchmove', (e) => {
